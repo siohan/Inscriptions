@@ -51,6 +51,62 @@ switch($current_version)
 				$dbresult2 = $db->Execute($query2, array($genid, $row['licence']));
 			}
 		}
+	}
+	case "0.2":
+	{
+	
+		//suppression de la table categ
+		//Ds la table inscription, le chp groupe devient integer 2 (au lieu de 1) et on ajoute un chp date_limite
+		
+		$dict = NewDataDictionary( $db );
+		//on supprime une table inutile
+		$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_inscriptions_options_categ");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$dict = NewDataDictionary( $db );
+		$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_inscriptions_inscriptions", "date_limite D");
+		$dict->ExecuteSQLArray( $sqlarray );
+		
+		$sqlarray = $dict->AlterColumnSQL(cms_db_prefix()."module_inscriptions_inscriptions",
+						     "groupe I(3) ");
+	 	$dict->ExecuteSQLArray( $sqlarray );
+		
+		$dict = NewDataDictionary( $db );
+		$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_inscriptions_belongs", "timbre I(11)");
+		$dict->ExecuteSQLArray( $sqlarray );
+		
+		$query = "UPDATE ".cms_db_prefix()."module_inscriptions_belongs set timbre = UNIX_TIMESTAMP()";
+		$db->Execute($query);
+		
+		
+		
+		$fn = cms_join_path(dirname(__FILE__),'templates','orig_relanceemailtemplate.tpl');
+		if( file_exists( $fn ) )
+		{
+			$template = file_get_contents( $fn );
+			$this->SetTemplate('relanceemail',$template);
+		}
+		/*
+		$fn = cms_join_path(dirname(__FILE__),'templates','orig_send_email.tpl');
+		if( file_exists( $fn ) )
+		{
+			$template = file_get_contents( $fn );
+			$this->SetTemplate('send_email',$template);
+		}
+		*/
+		# Les index
+		//on créé un index sur la table
+		$idxoptarray = array('UNIQUE');
+		$sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'choix_multi',
+				    		cms_db_prefix().'module_inscriptions_belongs', 'id_option,genid',$idxoptarray);
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		# Les préférences 
+		$this->SetPreference('admin_email', 'root@localhost.com');
+		
+		
+		$this->SetPreference('last_updated', time());
+		$this->SetPreference('default_group', 0);
 	}	
 	
 

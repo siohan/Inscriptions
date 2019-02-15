@@ -2,7 +2,7 @@
 
 #-------------------------------------------------------------------------
 # Module : Inscriptions - 
-# Version : 0.2, Sc
+# Version : 0.3, Sc
 # Auteur : Claude SIOHAN
 #-------------------------------------------------------------------------
 /**
@@ -20,7 +20,7 @@ class Inscriptions extends CMSModule
   
   function GetName() { return 'Inscriptions'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.2'; }  
+  function GetVersion() { return '0.3'; }  
   function GetHelp() { return $this->Lang('help'); }   
   function GetAuthor() { return 'Claude SIOHAN'; } 
   function GetAuthorEmail() { return 'claude.siohan@gmail.com'; }
@@ -41,7 +41,7 @@ class Inscriptions extends CMSModule
   
   function GetDependencies()
   {
-	return array('Adherents'=>'0.3','Messages'=>'0.3');
+	return array('Adherents'=>'0.3.2','Messages'=>'0.3');
   }
 
   
@@ -59,6 +59,11 @@ class Inscriptions extends CMSModule
 	$this->SetParameterType('display',CLEAN_STRING);
 	$this->SetParameterType('action',CLEAN_STRING);
 	$this->SetParameterType('record_id', CLEAN_INT);
+	$this->SetParameterType('genid', CLEAN_INT);
+	$this->SetParameterType('id_inscription', CLEAN_INT);
+	$this->SetParameterType('nom', CLEAN_NONE);
+	$this->SetParameterType('id_option', CLEAN_INT);
+	$this->SetParameterType('obj', CLEAN_NONE);
 	
 	
 	//form parameters
@@ -83,7 +88,7 @@ public function HasCapability($capability, $params = array())
 public function get_tasks()
 {
    $obj = array();
-	//$obj[0] = new RecupAdherentsTask();
+//	$obj[0] = new reponsesTask();
  //  	$obj[0] = new sendTask();  
 	
 return $obj; 

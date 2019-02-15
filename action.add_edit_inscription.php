@@ -23,7 +23,8 @@ $libelle = '';
 $actif = 0;
 $edit = 0;
 $insc_ops = new T2t_inscriptions;
-
+$adh_ops = new groups;
+$liste_groupes = $adh_ops->liste_groupes();
 if(isset($params['record_id']) && $params['record_id'] !="")
 {
 		$record_id = $params['record_id'];
@@ -50,17 +51,19 @@ $OuiNon = array('Oui'=>'1', 'Non'=>'0');
 			$this->CreateInputText($id,'nom',(isset($details['nom'])?$details['nom']:""),50,200));
 	$smarty->assign('description',
 			$this->CreateInputText($id,'description',(isset($details['description'])?$details['description']:""),50,200));
+	$smarty->assign('date_limite',
+			$this->CreateInputDate($id,'date_limite',(isset($details['date_limite'])?$details['date_limite']:"")));
 	$smarty->assign('date_debut',
 			$this->CreateInputDate($id,'date_debut',(isset($details['date_debut'])?$details['date_debut']:"")));
 	$smarty->assign('date_fin',
-					$this->CreateInputDate($id,'date_fin',(isset($details['date_fin'])?$details['date_fin']:"")));
+			$this->CreateInputDate($id,'date_fin',(isset($details['date_fin'])?$details['date_fin']:"")));
 	
 	$smarty->assign('actif',
 			$this->CreateInputDropdown($id,'actif',$OuiNon,$selectedindex = $index, $selectedvalue=(isset($details['actif'])?$details['actif']:"")));
 	$smarty->assign('groupe',
-			$this->CreateInputDropdown($id,'groupe',$OuiNon,$selectedindex = $index, $selectedvalue=$details['groupe']));
+			$this->CreateInputDropdown($id,'groupe',$liste_groupes,$selectedindex = $index, $selectedvalue=(isset($details['groupe'])?$details['groupe']:"")));
 	$smarty->assign('choix_multi',
-			$this->CreateInputDropdown($id,'choix_multi',$OuiNon,$selectedindex = $index, $selectedvalue=$details['choix_multi']));
+			$this->CreateInputDropdown($id,'choix_multi',$OuiNon,$selectedindex = $index, $selectedvalue=(isset($details['choix_multi'])?$details['choix_multi']:'Oui')));
 	$smarty->assign('submit',
 			$this->CreateInputSubmit($id, 'submit', $this->Lang('submit'), 'class="button"'));
 	$smarty->assign('cancel',

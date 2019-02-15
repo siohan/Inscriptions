@@ -16,11 +16,11 @@
 </div>
 <div class="pageoverflow">
   <p class="pagetext">Date Début</p>
-  <p class="pageinput">{$date_debut} - {$heure_debut}</p>
+  <p class="pageinput">{$date_debut}</p>
 </div>
 <div class="pageoverflow">
   <p class="pagetext">Date Fin</p>
-  <p class="pageinput">{$date_fin} - {$heure_fin}</p>
+  <p class="pageinput">{$date_fin}</p>
 </div>
 <div class="pageoverflow">
   <p class="pagetext">Actif</p>
@@ -29,10 +29,6 @@
 <div class="pageoverflow">
 	<p class="pagetext">Tarif de l'option:</p>
 	<p class="pageinput">{$tarif}</p>
-</div>
-<div class="pageoverflow">
-	<p class="pagetext">Groupe ?</p>
-	<p class="pageinput">{$groupe}</p>
 </div>
 <div class="pageoverflow">
     <p class="pagetext">&nbsp;</p>

@@ -69,18 +69,14 @@ $insc_ops = new T2t_inscriptions;
 		{
 			$tarif = $params['tarif'];
 		}
-		$categ = 0;
-		if (isset($params['categ']) && $params['categ'] !='')
-		{
-			$categ = $params['categ'];
-		}
+		
 
 
 		if($error < 1)
 		{
 			if($edit == 0)
 			{
-				$add = $insc_ops->add_option($id_inscription,$nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $tarif, $groupe, $categ);
+				$add = $insc_ops->add_option($id_inscription,$nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $tarif);
 				if(true === $add)
 				{
 					$this->SetMessage('Option ajoutée');
@@ -92,7 +88,7 @@ $insc_ops = new T2t_inscriptions;
 			}
 			else
 			{
-				$edit = $insc_ops->edit_option($record_id,$id_inscription,$nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut,$groupe, $categ);
+				$edit = $insc_ops->edit_option($record_id,$id_inscription,$nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut);
 				if(true === $edit)
 				{
 					$this->SetMessage('Option modifiée');

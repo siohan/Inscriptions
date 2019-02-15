@@ -27,8 +27,17 @@ $lang['nom_court'] = 'Donnez un nom court ex(N1, D2)et identifiez rapidement vos
 $lang['nb_joueurs'] = 'Indiquez le nombre de joueurs pour cette équipe';
 $lang['clt_mini'] = 'Indiquez le classement minimum requis en points pour pouvoir jouer dans cette équipe. 0 par défaut';
 $lang['points_maxi'] = 'Indiquez le total des points maximum que cette équipe ne doit pas dépasser. 0 par défaut';
+// les aides aux formulaires
+$lang['help_nom_inscription'] = 'Donnez un nom évocateur pour votre événement';
+$lang['help_date_limite'] = 'Passée la date limite, il sera impossible d\'envoyer des relances et de s\'inscrire';
+$lang['help_date_debut'] = 'Entrez la date de début votre événement';
+$lang['help_date_fin'] = 'Entrez la date de fin votre événement; Si nul, la date de début sera appliquée';
+$lang['help_actif'] = 'Activez ou désactivez votre événement. Si inactif, les relances et les inscriptions sont stoppées.';
+$lang['help_groupe'] = 'Choisissez le groupe à qui envoyer les inscriptions pour votre événement';
+$lang['help_choix_multi'] = 'Si plusieurs réponses sont possibles, choisissez Oui. Sinon Non';
 $lang['help'] = '<h3>Que fait ce module ?</h3>
 <p>Ce module vous permet de gérer les inscriptions à diverses manifestations, rencontres, entrainements,etc..</p>
+<h3>Installation</h3>
 <ul>
 <li>Pour obtenir la dernière version en cours (avant release officielle)
 <a href="https://github.com/siohan/adherents">Version github</a>.</li>

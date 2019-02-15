@@ -35,13 +35,14 @@ $flds = "
 	id I(11) AUTO KEY,
 	nom C(255),
 	description C(255),
+	date_limite D,
 	date_debut D,
 	date_fin D,
 	heure_debut T,
 	heure_fin T,
 	actif I(1) DEFAULT 0,
 	statut I(1) DEFAULT 0,
-	groupe I(1) DEFAULT 0,
+	groupe I(3) DEFAULT 0,
 	choix_multi I(1)";
 	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_inscriptions", $flds, $taboptarray);
 	$dict->ExecuteSQLArray($sqlarray);			
@@ -63,8 +64,7 @@ $flds = "
 	heure_fin T,
 	actif I(1),
 	tarif N(6,2),
-	groupe I(1) DEFAULT 0,
-	categ I(1) DEFAULT 0";
+	groupe I(1) DEFAULT 0";
 	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_options", $flds, $taboptarray);
 	$dict->ExecuteSQLArray($sqlarray);			
 //
@@ -73,16 +73,6 @@ $taboptarray = array( 'mysql' => 'ENGINE=MyISAM' );
 
 $dict = NewDataDictionary( $db );
 
-// table schema description
-$flds = "
-	id I(11) AUTO KEY,
-	id_option I(11),
-	categ C(255)	";
-	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_options_categ", $flds, $taboptarray);
-	$dict->ExecuteSQLArray($sqlarray);			
-//
-// mysql-specific, but ignored by other database
-$taboptarray = array( 'mysql' => 'ENGINE=MyISAM' );
 
 
 
@@ -94,7 +84,8 @@ $flds = "
 	id I(11) AUTO KEY,
 	id_inscription I(11),
 	id_option I(11),
-	genid I(11)";
+	genid I(11),
+	timbre I(11)";
 	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_belongs", $flds, $taboptarray);
 	$dict->ExecuteSQLArray($sqlarray);			
 //
@@ -104,7 +95,35 @@ $taboptarray = array( 'mysql' => 'ENGINE=MyISAM' );
 //Permissions
 $this->CreatePermission('Inscriptions use', 'Utiliser le module Inscriptions');
 //$this->CreatePermission('Adherents prefs', 'Modifier les données du compte');
+//mails templates
+# Mails templates
 
+
+$fn = cms_join_path(dirname(__FILE__),'templates','orig_relanceemailtemplate.tpl');
+if( file_exists( $fn ) )
+{
+	$template = file_get_contents( $fn );
+	$this->SetTemplate('relanceemail',$template);
+}
+/*
+$fn = cms_join_path(dirname(__FILE__),'templates','orig_send_email.tpl');
+if( file_exists( $fn ) )
+{
+	$template = file_get_contents( $fn );
+	$this->SetTemplate('send_email',$template);
+}
+*/
+# Les index
+//on créé un index sur la table
+$idxoptarray = array('UNIQUE');
+$sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'choix_multi',
+		    		cms_db_prefix().'module_inscriptions_belongs', 'id_option,genid',$idxoptarray);
+$dict->ExecuteSQLArray($sqlarray);
+
+# Les préférences 
+$this->SetPreference('admin_email', 'root@localhost.com');
+$this->SetPreference('last_updated', time());
+$this->SetPreference('default_group', 0);
 
 // put mention into the admin log
 $this->Audit( 0, 

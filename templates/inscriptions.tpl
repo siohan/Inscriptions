@@ -24,18 +24,21 @@ $(document).ready(function(){
 <h2>Liste des Inscriptions</h2>
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound} &nbsp; {$add_edit}</p></div>
 {if $itemcount > 0}
-{$form2start}
+{*$form2start*}
 <table border="0" cellspacing="0" cellpadding="0" class="pagetable">
  <thead>
 	<tr>
 		<th>Id</th>
 		<th>Nom</th>
 		<th>Description </th>
+		<th>Date limite</th>
 		<th>Début</th>
 		<th>Fin</th>
 		<th>actif ?</th>
 		<th>Prévenir</th>
 		<th>Options actives</th>
+		<th>Choix multi</th>
+		<th>Groupe</th>
 		<th>Inscrits</th>
 		<th colspan="3">Action(s)</th>
 		<!--<th><input type="checkbox" id="selectall" name="selectall"></th>-->
@@ -47,23 +50,28 @@ $(document).ready(function(){
 	<td>{$entry->id}</td>
 	<td>{$entry->nom}</td>
 	<td>{$entry->description}</td>
+	<td>{$entry->date_limite|date_format:"%d-%m-%Y"}</td>
 	<td>{$entry->date_debut|date_format:"%d-%m-%Y"} - {$entry->heure_debut}</td>
 	<td>{$entry->date_fin|date_format:"%d-%m-%Y"} - {$entry->heure_fin}</td>
 	<td>{$entry->actif}</td>
-	<th>{$entry->emailing}</td>
+	<td>{$entry->emailing}</td>
 	<td>{$entry->nb_options}</td>
-	<td>{$entry->inscrits}</td>
+	<td>{$entry->choix_multi}</td>
+	<td>{$entry->groupe}</td>
+	<td>{$entry->inscrits}/{$entry->nb_total}</td>
 	<td>{$entry->editlink}</td> 
-	<td>{$entry->view}</td> 
-	<td>{$entry->print}</td> 
-<!--	<td><input type="checkbox" name="{$actionid}sel[]" value="{$entry->id}" class="select"></td>-->
+	<td>{$entry->view}</td>
+	<td>{$entry->delete}</td> 
+<!--	<td>{$entry->print}</td> 
+	<td><input type="checkbox" name="{$actionid}sel[]" value="{$entry->id}" class="select"></td>-->
   </tr>
 {/foreach}
  </tbody>
 </table>
-<!-- SELECT DROPDOWN -->
+
+<!-- SELECT DROPDOWN 
 <div class="pageoptions" style="float: right;">
 <br/>{$actiondemasse}{$submit_massaction}
-  </div>
+  </div> -->
 {*$form2end*}
 {/if}

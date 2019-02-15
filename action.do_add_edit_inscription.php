@@ -8,7 +8,10 @@ debug_display($params, 'Parameters');
 		$this->SetMessage("$designation");
 		$this->RedirectToAdminTab('insc');
 	}
-
+if(isset($params['cancel']))
+{
+	$this->RedirectToAdminTab('insc');
+}
 //on récupère les valeurs
 //pour l'instant pas d'erreur
 $aujourdhui = date('Y-m-d ');
@@ -40,10 +43,24 @@ $insc_ops = new T2t_inscriptions;
 		{
 			$date_debut = $params['date_debut'];
 		}
-		if (isset($params['date_fin']) && $params['date_fin'] !='')
+		if (!isset($params['date_fin']) || $params['date_fin'] !='' || $params['date_fin'] < $params['date_debut'])
+		{
+			$date_fin = $date_debut;
+		}
+		else
 		{
 			$date_fin = $params['date_fin'];
 		}
+		if (isset($params['date_limite']) && $params['date_limite'] !='')
+		{
+			$date_limite = $params['date_limite'];
+		}
+		else
+		{
+			$date_limite = $date_debut;
+		}
+	
+		
 		if (isset($params['heure_debut']) && $params['heure_debut'] !='')
 		{
 			$heure_debut = $params['heure_debut'];
@@ -70,7 +87,7 @@ $insc_ops = new T2t_inscriptions;
 		{
 			if($edit == 0)
 			{
-				$add = $insc_ops->add_inscription($nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut, $groupe, $choix_multi);
+				$add = $insc_ops->add_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut, $groupe, $choix_multi);
 				if(true === $add)
 				{
 					$this->SetMessage('Inscription ajoutée');
@@ -82,7 +99,7 @@ $insc_ops = new T2t_inscriptions;
 			}
 			else
 			{
-				$edit = $insc_ops->edit_inscription($record_id,$nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut,$groupe, $choix_multi);
+				$edit = $insc_ops->edit_inscription($record_id,$nom, $description, $date_limite, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut,$groupe, $choix_multi);
 				if(true === $edit)
 				{
 					$this->SetMessage('Inscription modifiée');
