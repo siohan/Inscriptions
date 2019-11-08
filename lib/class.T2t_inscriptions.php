@@ -10,7 +10,7 @@ class T2t_inscriptions
 function details_inscriptions($id_inscription)
 {
 	$db = cmsms()->GetDb();
-	$query = "SELECT id,nom, description, date_limite, date_debut, date_fin, heure_debut, heure_fin, actif, statut, groupe, choix_multi FROM ".cms_db_prefix()."module_inscriptions_inscriptions WHERE id = ?";
+	$query = "SELECT id,nom, description, date_limite, date_debut, date_fin, actif, groupe, choix_multi, timbre FROM ".cms_db_prefix()."module_inscriptions_inscriptions WHERE id = ?";
 	$dbresult = $db->Execute($query, array($id_inscription));
 	$details = array();
 	if($dbresult)
@@ -23,12 +23,10 @@ function details_inscriptions($id_inscription)
 			$details['date_limite'] = $row['date_limite'];
 			$details['date_debut'] = $row['date_debut'];
 			$details['date_fin'] = $row['date_fin'];
-			$details['heure_debut'] = $row['heure_debut'];
-			$details['heure_fin'] = $row['heure_fin'];
 			$details['actif'] = $row['actif'];
-			$details['statut'] = $row['statut'];
 			$details['groupe'] = $row['groupe'];
 			$details['choix_multi'] = $row['choix_multi'];
+			$details['timbre'] = $row['timbre'];
 		}
 	}
 		return $details;
@@ -36,11 +34,11 @@ function details_inscriptions($id_inscription)
 
 }
 //ajoute une inscription
-function add_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut, $groupe, $choix_multi)
+function add_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $choix_multi)
 {
 	$db = cmsms()->GetDb();
-	$query = "INSERT INTO ".cms_db_prefix()."module_inscriptions_inscriptions (nom, description, date_limite, date_debut, date_fin, heure_debut, heure_fin, actif, statut, groupe, choix_multi) VALUES (?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut, $groupe, $choix_multi));
+	$query = "INSERT INTO ".cms_db_prefix()."module_inscriptions_inscriptions (nom, description, date_limite, date_debut, date_fin, actif, groupe, choix_multi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $choix_multi));
 	if($dbresult)
 	{
 		return true;
@@ -51,11 +49,11 @@ function add_inscription($nom, $description, $date_limite, $date_debut, $date_fi
 	}
 }
 ##
-function edit_inscription($record_id,$nom, $description,$date_limite, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut,$groupe, $choix_multi)
+function edit_inscription($record_id,$nom, $description,$date_limite, $date_debut, $date_fin, $actif,$groupe, $choix_multi)
 {
 	$db = cmsms()->GetDb();
-	$query = "UPDATE ".cms_db_prefix()."module_inscriptions_inscriptions SET nom = ?, description = ?, date_limite = ?, date_debut = ?, date_fin = ?, heure_debut = ?, heure_fin = ?, actif = ?, statut = ?, groupe = ?, choix_multi = ? WHERE id = ?";
-	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $statut,$groupe, $choix_multi, $record_id));
+	$query = "UPDATE ".cms_db_prefix()."module_inscriptions_inscriptions SET nom = ?, description = ?, date_limite = ?, date_debut = ?, date_fin = ?, actif = ?, groupe = ?, choix_multi = ? WHERE id = ?";
+	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $choix_multi, $record_id));
 	if($dbresult)
 	{
 		return true;
@@ -92,7 +90,7 @@ function count_users_in_inscription($id_inscription)
 {
 	global $gCms;
 	$db = cmsms()->GetDb();
-	$query = "SELECT count(*) AS nb FROM ".cms_db_prefix()."module_inscriptions_belongs WHERE id_inscription = ?";
+	$query = "SELECT count(DISTINCT genid) AS nb FROM ".cms_db_prefix()."module_inscriptions_belongs WHERE id_inscription = ?";//" GROUP BY genid";
 	$dbresult = $db->Execute($query, array($id_inscription));
 	if($dbresult)
 	{
@@ -111,6 +109,22 @@ function delete_users_in_inscription($id_inscription, $genid)
 	$db = cmsms()->GetDb();
 	$query = "DELETE FROM ".cms_db_prefix()."module_inscriptions_belongs WHERE id_inscription = ? AND genid = ?";
 	$dbresult = $db->Execute($query, array($id_inscription, $genid));
+	if($dbresult)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+}
+//supprime tous les adhérents d'une inscription !
+function delete_all_responses($id_inscription)
+{
+	$db = cmsms()->GetDb();
+	$query = "DELETE FROM ".cms_db_prefix()."module_inscriptions_belongs WHERE id_inscription = ?";
+	$dbresult = $db->Execute($query, array($id_inscription));
 	if($dbresult)
 	{
 		return true;
@@ -143,7 +157,7 @@ function is_inscrit($id_inscription, $genid)
 function details_option($record_id)
 {
 	$db = cmsms()->GetDb();
-	$query = "SELECT id,id_inscription,nom, description, date_debut, date_fin, heure_debut, heure_fin, actif, tarif, groupe FROM ".cms_db_prefix()."module_inscriptions_options WHERE id = ?";
+	$query = "SELECT id,id_inscription,nom, description, date_debut, date_fin, actif, tarif, groupe, timbre FROM ".cms_db_prefix()."module_inscriptions_options WHERE id = ?";
 	$dbresult = $db->Execute($query, array($record_id));
 	$details = array();
 	if($dbresult)
@@ -155,11 +169,10 @@ function details_option($record_id)
 			$details['description'] = $row['description'];
 			$details['date_debut'] = $row['date_debut'];
 			$details['date_fin'] = $row['date_fin'];
-			$details['heure_debut'] = $row['heure_debut'];
-			$details['heure_fin'] = $row['heure_fin'];
 			$details['actif'] = $row['actif'];
 			$details['tarif'] = $row['tarif'];
 			$details['groupe'] = $row['groupe'];
+			$details['timbre'] = $row['timbre'];
 		}
 	}
 		return $details;
@@ -168,11 +181,11 @@ function details_option($record_id)
 
 }
 //ajoute une option à une inscription
-function add_option($id_inscription,$nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $tarif)
+function add_option($id_inscription,$nom, $description, $date_debut, $date_fin, $actif, $tarif, $timbre)
 {
 	$db = cmsms()->GetDb();
-	$query = "INSERT INTO ".cms_db_prefix()."module_inscriptions_options (id_inscription,nom, description, date_debut, date_fin, heure_debut, heure_fin, actif,tarif) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	$dbresult = $db->Execute($query, array($id_inscription,$nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif, $tarif));
+	$query = "INSERT INTO ".cms_db_prefix()."module_inscriptions_options (id_inscription,nom, description, date_debut, date_fin, actif,tarif,timbre) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
+	$dbresult = $db->Execute($query, array($id_inscription,$nom, $description, $date_debut, $date_fin, $actif, $tarif, $timbre));
 	if($dbresult)
 	{
 		return true;
@@ -183,11 +196,11 @@ function add_option($id_inscription,$nom, $description, $date_debut, $date_fin, 
 	}
 }
 //edite une option
-function edit_option($record_id,$id_inscription,$nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif,$tarif)
+function edit_option($record_id,$id_inscription,$nom, $description, $date_debut, $date_fin, $actif,$tarif)
 {
 	$db = cmsms()->GetDb();
-	$query = "UPDATE ".cms_db_prefix()."module_inscriptions_options SET id_inscription = ?, nom = ?, description = ?, date_debut = ?, date_fin = ?, heure_debut = ?, heure_fin = ?, actif = ?,tarif = ? WHERE id = ?";
-	$dbresult = $db->Execute($query, array($id_inscription, $nom, $description, $date_debut, $date_fin, $heure_debut, $heure_fin, $actif,$tarif, $record_id));
+	$query = "UPDATE ".cms_db_prefix()."module_inscriptions_options SET id_inscription = ?, nom = ?, description = ?, date_debut = ?, date_fin = ?, actif = ?,tarif = ? WHERE id = ?";
+	$dbresult = $db->Execute($query, array($id_inscription, $nom, $description, $date_debut, $date_fin, $actif,$tarif, $record_id));
 	if($dbresult)
 	{
 		return true;
@@ -324,7 +337,7 @@ function search_id_option($id_inscription, $nom)
 	
 }
 //les réponses
-//ajoute une réponse
+//ajoute le choix d'une option pour un utilisateur
 function add_reponse($id_inscription, $id_option, $genid)
 {
 	$db = cmsms()->GetDb();
@@ -473,26 +486,43 @@ function liste_options($id_inscription)
 //envoie un email normal
 function send_normal_email($sender, $recipient,$subject, $priority, $lien)
 {
-		
-		$insc_ops = new inscriptions;
 	
-		$body = $insc_ops->GetTemplate('relanceemail');
+	$insc_ops = new inscriptions;
+
+	$tpl = $smarty->CreateTemplate($this->GetTemplateResource('relanceemail.tpl'), null, null, $smarty);
+		$tpl->assign('lien', $lien);
 		
-		$body = $insc_ops->ProcessTemplateFromData($body);
+		
 		$cmsmailer = new \cms_mailer();
 		$cmsmailer->reset();
 	//	$cmsmailer->SetFrom($sender);//$this->GetPreference('admin_email'));
-		$cmsmailer->AddAddress($recipient,$name='');
+		$cmsmailer->AddAddress($recipient);
 		$cmsmailer->IsHTML(true);
 		$cmsmailer->SetPriority($priority);
-		
-		$cmsmailer->SetBody($body);
+	
+		$cmsmailer->SetBody($tpl);
 		$cmsmailer->SetSubject($subject);
 		$cmsmailer->Send();
                 if( !$cmsmailer->Send() ) 
 		{			
                     	return false;
                 }
+		
+}
+function sofar()
+{
+	$mktime = function( array $in, string $prefix, $is_start = false ) {
+                $mo = (int) $in[$prefix.'Month'];
+                $dd = (int) $in[$prefix.'Day'];
+                $yr = (int) $in[$prefix.'Year'];
+                $hh = (int) $in[$prefix.'Hour'];
+                $mm = (int) $in[$prefix.'Minute'];
+                $ss = $is_start ? 00 : 59;
+
+                // if the date is before jan-1-1970 ... that's no date.
+                if( $yr <= 1970 && $mo == 1 && $dd == 1 ) return;
+                return mktime( $hh, $mm, $ss, $mo, $dd, $yr );
+            };
 }
 function strtodate($rss_time) {
         $day = substr($rss_time, 5, 2);

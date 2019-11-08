@@ -18,7 +18,7 @@ if(isset($params['activetab']) && !empty($params['activetab']))
 	
 	echo $this->SetTabHeader('ins', 'Inscriptions', ('ins' == $tab)?true:false);
 	echo $this->SetTabHeader('emails', 'Emails', ('emails' == $tab)?true:false);
-//	echo $this->SetTabHeader('auto_process', 'Alertes auto', ('auto_process' == $tab)?true:false);	
+	
 	
 	echo $this->EndTabHeaders();
 
@@ -30,13 +30,9 @@ if(isset($params['activetab']) && !empty($params['activetab']))
    	echo $this->EndTab();
 
 	echo $this->StartTab('emails', $params);
-	include(dirname(__FILE__).'/action.admin_notifications_tab.php');
+	include(dirname(__FILE__).'/action.admin_emails_tab.php');
    	echo $this->EndTab();
-/*
-	echo $this->StartTab('auto_process', $params);
-	include(dirname(__FILE__).'/action.auto_process_tab.php');
-   	echo $this->EndTab();
-*/
+
 
 echo $this->EndTabContent();
 

@@ -63,7 +63,7 @@ $insc_ops = new T2t_inscriptions;
 					}
 					if(true === $add)
 					{
-						echo '<h2>Inscription ajoutée</h2><p>Ben c\'était pas si compliqué !</p>';
+						echo '<h2>Réponse(s) ajoutée(s)</h2><p>Merci d\'avoir répondu !</p>';
 					}
 					else
 					{

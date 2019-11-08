@@ -13,7 +13,9 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 	$details = $insc_ops->details_inscriptions($id_inscription);
 	$titre = $details['nom'];
 	$choix_multi = $details['choix_multi'];
+	$description = $details['description'];
 	$smarty->assign('titre', $titre);
+	$smarty->assign('description', $description);
 	$subject = $titre;
 	$error = 0;
 	
@@ -60,13 +62,14 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 	{
 		// on commence le traitement
 		//if($aujourdhui <= $senddate = date('Y-m-d');
-
+	//	$timbre = $this->mktime($Time_hour);
 		$replyto = $sender;
 		$gp_ops = new groups;
 		$recipients_number = $gp_ops->count_users_in_group($group_id);
 		$mess_ops = new T2t_messages;
 		$insc_ops = new T2t_inscriptions;
-		$mess = $mess_ops->add_message($sender, $senddate, $sendtime, $replyto, $group_id,$recipients_number, $subject, $titre, $sent);
+		$timbre = time();
+		$mess = $mess_ops->add_message($sender, $senddate, $sendtime, $replyto, $group_id,$recipients_number, $subject, $description, $sent, $priority, $timbre);
 		$message_id =$db->Insert_ID();
 		
 		
@@ -106,24 +109,41 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 							$destinataires['genid'] = $sels;
 							$senttouser = 1;
 							$status = "Email Ok";
+							
 							$ar = 0;
 							//on consruit une url
-						//	$lien = $this->cms_module_create_url(&Inscriptions,$id,$returnid,'default',)
-							$debut_url = $config['root_url'];
-							$retourid = $this->GetPreference('pageid_inscriptions');//44;
-							$page = $cg_ops->resolve_alias_or_id($retourid);//'presence';
-							$action_module = 'cntnt01';
-							
-							$lien = $debut_url.'/index.php?page='.$page.'&mact=Inscriptions,'.$action_module.',default,0&'.$action_module.'id_inscription='.$id_inscription.'&'.$action_module.'genid='.$sels;
-							$smarty->assign('lien', $lien);
-							
-							$envoi = $insc_ops->send_normal_email($sender, $email_contact,$subject, $priority, $lien);
-							
-								if(FALSE === $envoi)
-								{
-									$mess_ops->not_sent_emails($message_id, $recipients);
-								}
-							
+							$retourid = $this->GetPreference('pageid_inscriptions');
+							$page = $cg_ops->resolve_alias_or_id($retourid);
+							$lien = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels));
+							$montpl = $this->GetTemplateResource('relanceemail.tpl');						
+							$smarty = cmsms()->GetSmarty();
+							// do not assign data to the global smarty
+							$tpl = $smarty->createTemplate($montpl);
+							$tpl->assign('lien',$lien);
+							$tpl->assign('titre',$titre);
+							$tpl->assign('description',$description);
+						 	$output = $tpl->fetch();
+						
+							$cmsmailer = new \cms_mailer();
+							$cmsmailer->reset();
+							$cmsmailer->AddAddress($email_contact);
+							$cmsmailer->IsHTML(true);
+							$cmsmailer->SetPriority($priority);
+							$cmsmailer->SetBody($output);
+							$cmsmailer->SetSubject($subject);
+							$cmsmailer->Send();
+					                if( !$cmsmailer->Send() ) 
+							{			
+					                    	return false;
+								$mess_ops->not_sent_emails($message_id, $recipients);
+					                }
+					
+						//	$envoi = $insc_ops->send_normal_email($sender, $email_contact,$subject, $priority, $lien);
+						/*	if(FALSE === $envoi)
+							{
+								$mess_ops->not_sent_emails($message_id, $recipients);
+							}
+						*/	
 						}
 						else
 						{

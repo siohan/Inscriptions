@@ -103,6 +103,6 @@ if($dbresult)
 }  
 else
 {
-	$this->SetMessage('Erreurde requete !');
+	$this->SetMessage('Erreur de requete !');
 }
 $this->Redirect($id, 'defaultadmin', $returnid);

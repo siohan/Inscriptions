@@ -20,7 +20,7 @@ class Inscriptions extends CMSModule
   
   function GetName() { return 'Inscriptions'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.3'; }  
+  function GetVersion() { return '0.4'; }  
   function GetHelp() { return $this->Lang('help'); }   
   function GetAuthor() { return 'Claude SIOHAN'; } 
   function GetAuthorEmail() { return 'claude.siohan@gmail.com'; }
@@ -41,7 +41,7 @@ class Inscriptions extends CMSModule
   
   function GetDependencies()
   {
-	return array('Adherents'=>'0.3.2','Messages'=>'0.3');
+	return array('Adherents'=>'0.3.4.5','Messages'=>'0.3');
   }
 
   
@@ -64,7 +64,8 @@ class Inscriptions extends CMSModule
 	$this->SetParameterType('nom', CLEAN_NONE);
 	$this->SetParameterType('id_option', CLEAN_INT);
 	$this->SetParameterType('obj', CLEAN_NONE);
-	
+	$this->SetParameterType('choix_multi', CLEAN_INT);
+	$this->SetParameterType('groupe', CLEAN_INT);
 	
 	//form parameters
 	$this->SetParameterType('submit',CLEAN_STRING);
@@ -75,7 +76,8 @@ class Inscriptions extends CMSModule
 
 function InitializeAdmin()
 {
-  	$this->SetParameters();
+  	return parent::InitializeAdmin();
+	$this->SetParameters();
 	//$this->CreateParameter('pagelimit', 100000, $this->Lang('help_pagelimit'));
 }
 

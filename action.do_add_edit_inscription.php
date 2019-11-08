@@ -51,7 +51,7 @@ $insc_ops = new T2t_inscriptions;
 		{
 			$date_fin = $params['date_fin'];
 		}
-		if (isset($params['date_limite']) && $params['date_limite'] !='')
+		if (isset($params['date_limite']) && $params['date_limite'] !='' && $params['date_limite'] < $date_fin)
 		{
 			$date_limite = $params['date_limite'];
 		}

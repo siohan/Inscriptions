@@ -102,11 +102,42 @@ switch($current_version)
 		$dict->ExecuteSQLArray($sqlarray);
 		
 		# Les préférences 
-		$this->SetPreference('admin_email', 'root@localhost.com');
-		
-		
+		$this->SetPreference('admin_email', 'root@localhost.com');		
 		$this->SetPreference('last_updated', time());
 		$this->SetPreference('default_group', 0);
+	}
+	case "0.3" :
+	{
+		$dict = NewDataDictionary( $db );
+		//on supprime une colonne inutile
+		$sqlarray = $dict->DropColumnSQL( cms_db_prefix()."module_inscriptions_inscriptions", "statut");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_inscriptions_inscriptions", "timbre I(11)");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_inscriptions_options", "timbre I(11)");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		//changement de types de données on passe en int(11)
+		$sqlarray = $dict->AlterColumnSQL( cms_db_prefix()."module_inscriptions_options", "tarif F");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_inscriptions_belongs", "timbre I(11)");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		//changement de types de données on passe en int(11)
+		$sqlarray = $dict->AlterColumnSQL( cms_db_prefix()."module_inscriptions_inscriptions", "date_limite I(11), date_debut I(11), date_fin I(11)");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		//changement de types de données on passe en int(11)
+		$sqlarray = $dict->AlterColumnSQL( cms_db_prefix()."module_inscriptions_options", "date_debut I(11), date_fin I(11)");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$sqlarray = $dict->DropColumnSQL( cms_db_prefix()."module_inscriptions_options", "heure_debut, heure_fin");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$this->SetPreference('pageid_inscriptions', '');
 	}	
 	
 

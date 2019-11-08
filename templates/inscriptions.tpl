@@ -22,7 +22,7 @@ $(document).ready(function(){
 //]]>
 </script>
 <h2>Liste des Inscriptions</h2>
-<div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound} &nbsp; {$add_edit}</p></div>
+<div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound} &nbsp; <a href="{cms_action_url action=add_edit_inscription}">{admin_icon icon='newobject.gif'}Ajouter une inscription</a></p></div>
 {if $itemcount > 0}
 {*$form2start*}
 <table border="0" cellspacing="0" cellpadding="0" class="pagetable">
@@ -32,15 +32,15 @@ $(document).ready(function(){
 		<th>Nom</th>
 		<th>Description </th>
 		<th>Date limite</th>
-		<th>Début</th>
-		<th>Fin</th>
+		<th>Début - Fin</th>
 		<th>actif ?</th>
 		<th>Prévenir</th>
 		<th>Options actives</th>
+		<th>Options</th>
+		<th>Inscrit(s)</th>
 		<th>Choix multi</th>
 		<th>Groupe</th>
-		<th>Inscrits</th>
-		<th colspan="3">Action(s)</th>
+		<th colspan="2">Action(s)</th>
 		<!--<th><input type="checkbox" id="selectall" name="selectall"></th>-->
 	</tr>
  </thead>
@@ -51,19 +51,17 @@ $(document).ready(function(){
 	<td>{$entry->nom}</td>
 	<td>{$entry->description}</td>
 	<td>{$entry->date_limite|date_format:"%d-%m-%Y"}</td>
-	<td>{$entry->date_debut|date_format:"%d-%m-%Y"} - {$entry->heure_debut}</td>
-	<td>{$entry->date_fin|date_format:"%d-%m-%Y"} - {$entry->heure_fin}</td>
+	<td>{$entry->date_debut|date_format:"%d-%m-%Y (%Hh%M)"}-{$entry->date_fin|date_format:"%d-%m-%Y (%Hh%M)"}</td>
 	<td>{$entry->actif}</td>
 	<td>{$entry->emailing}</td>
 	<td>{$entry->nb_options}</td>
+	<td>{$entry->options}</td>
+	<td>{$entry->nb_inscrits}</td>
 	<td>{$entry->choix_multi}</td>
 	<td>{$entry->groupe}</td>
-	<td>{$entry->inscrits}/{$entry->nb_total}</td>
 	<td>{$entry->editlink}</td> 
-	<td>{$entry->view}</td>
 	<td>{$entry->delete}</td> 
-<!--	<td>{$entry->print}</td> 
-	<td><input type="checkbox" name="{$actionid}sel[]" value="{$entry->id}" class="select"></td>-->
+<!--	<td><input type="checkbox" name="{$actionid}sel[]" value="{$entry->id}" class="select"></td>-->
   </tr>
 {/foreach}
  </tbody>

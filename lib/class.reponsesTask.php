@@ -57,8 +57,8 @@ class reponsesTask implements CmsRegularTask
      
 	// Ce qu'il y a à exécuter ici
 			
-	$last_updated = $this->GetPreference('last_updated');
-	$admin_email = $this->GetPreference('admin_email');
+	$last_updated = $ping->GetPreference('last_updated');
+	$admin_email = $ping->GetPreference('admin_email');
 	$query = "SELECT id_inscription, id_option, genid, timbre FROM ".cms_db_prefix()."module_inscriptions_belongs WHERE timbre > ? ORDER BY id_inscription ASC, id_option ASC";
 	$dbresult = $db->Execute($query, array($last_updated));
 	if($dbresult)
@@ -67,7 +67,7 @@ class reponsesTask implements CmsRegularTask
 		{
 
 			//on instancie la classe et on va commencer à boucler
-			$group = $this->GetPreference('default_group');
+			$group = $ping->GetPreference('default_group');
 			
 			$destinataires = array();
 			if($group != 0)
@@ -103,7 +103,6 @@ class reponsesTask implements CmsRegularTask
 			while ($row= $dbresult->FetchRow())
 			{
 				$onerow= new StdClass();
-				$onerow->rowclass= $rowclass;
 				$inscription = $tt_ops->details_inscriptions($row['id_inscription']);
 				$onerow->nom = $inscription['nom'];
 				$option = $tt_ops->details_option($row['id_option']);

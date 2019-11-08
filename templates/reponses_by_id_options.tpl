@@ -21,28 +21,20 @@ $(document).ready(function(){
 });
 //]]>
 </script>
-<h2>Liste des réponses pour : {$titre}</h2>
-{cms_action_url action=admin_resp_by_option  id_inscription=$id_inscription assign=new_url}
+<h2>Liste des réponses obtenues pour : {$titre}</h2>
 <div class="pageoptions"><p class="pageoptions"><a href="{cms_action_url action='admin_options' record_id=$id_inscription}">{admin_icon icon='back.gif'} Revenir</a> <br /> {$itemcount}&nbsp;{$itemsfound} &nbsp; {$add_edit}</p></div>
-<div class="pageoptions"><p class="pageoptions">{$details} </p></div>
-
 {if $itemcount > 0}
 
 <table border="0" cellspacing="0" cellpadding="0" class="pagetable">
  <thead>
 	<tr>	
 		<th>Nom</th>	
-		<th>Réponse</th>
-		<th colspan="2">Actions</th>	
 	</tr>
  </thead>
  <tbody>
 {foreach from=$items item=entry}
   <tr class="{$entry->rowclass}">
 	<td>{$entry->adherent}</td>
-	<td>{$entry->reponse} ({$entry->tarif})</td>
-	<td>{$entry->edit}</td>
-	<td>{$entry->delete}</td>
   </tr>
 {/foreach}
  </tbody>

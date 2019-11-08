@@ -1,7 +1,7 @@
 <?php
 if(!isset($gCms)) exit;
 $db = cmsms()->GetDb();
-
+//debug_display($params, 'Parameters');
 $error = 0; //on instancie un compteur d'erreur
 if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 {
@@ -9,13 +9,15 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 	$insc_ops = new T2t_inscriptions;
 	$details = $insc_ops->details_inscriptions($id_inscription);	
 	$date_limite = $details['date_limite'];
+	$description = $details['description'];
 	$actif = $details['actif'];
 	$choix_multi = $details['choix_multi'];
 	$date2 = $insc_ops->datetotimestamp($date_limite);
 	$date3 = time();
-	$titre = $details['nom'].' '.$details['description'];
+	$titre = $details['nom'];
 	$smarty->assign('titre', $titre);
-	if($actif == 0 || $date2 > $date3)
+	$smarty->assign('description', $description);
+	if($actif == 0 || $date3 - $date2 >0)
 	{
 		echo 'Les inscriptions sont fermées ou la date limite de réponse est dépassée !';
 	//	$this->Redirect();exit;

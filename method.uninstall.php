@@ -50,6 +50,11 @@ $dict->ExecuteSQLArray($sqlarray);
 // remove the permissions
 $this->RemovePermission('Inscriptions use');
 
+//Remove les préférences
+$this->RemovePreference();
+
+//on supprime aussi les templates
+$this->DeleteTemplate();
 
 // put mention into the admin log
 $this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('uninstalled'));

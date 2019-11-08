@@ -11,7 +11,7 @@ $db =& $this->GetDb();
 global $themeObject;
 $aujourdhui = date('Y-m-d');
 $insc_ops = new T2t_inscriptions;
-
+debug_display($params, 'Parameters');
 if(isset($params['obj']) && $params['obj'] != '')
 {
 	$obj = $params['obj'];
@@ -107,7 +107,7 @@ switch($obj)
 		}
 		$this->RedirectToAdminTab('inscriptions');
 	}
-	case "delete_reponse":
+	case "delete_reponse"://supprime le choix d'une option d'un user = désinscription d'une option
 	{
 		$db = cmsms()->GetDb();
 		$error = 0;
@@ -143,6 +143,55 @@ switch($obj)
 				$this->SetMessage('Choix non supprimé');
 			}
 		}
-		$this->Redirect($id, 'admin_reponses', $returnid, array('id_inscription'=>$id_inscription));
+		$this->Redirect($id, 'assign_user_idoption', $returnid, array('id_inscription'=>$id_inscription, 'genid'=>$genid, 'details'=>1));
 	}
+	
+	//ajoute un choix d'une option pour un utilisateur
+	case "add_reponse"://supprime le choix d'une option d'un user = désinscription d'une option
+	{
+		$db = cmsms()->GetDb();
+		$error = 0;
+		if(isset($params['id_inscription']) && $params['id_inscription'] != '')
+		{
+			$id_inscription = $params['id_inscription'];
+		}
+		if(isset($params['genid']) && $params['genid'] != '')
+		{
+			$genid = $params['genid'];
+		}
+		else
+		{
+			$error++;
+		}
+		if(isset($params['id_option']) && $params['id_option'] != '')
+		{
+			$id_option = $params['id_option'];
+		}
+		else
+		{
+			$error++;
+		}
+		if($error < 1)
+		{
+			$del_rep = $insc_ops->add_reponse($id_inscription,$id_option, $genid);
+			if(true === $del_rep)
+			{
+				$this->SetMessage('Choix ajouté');
+			}
+			else
+			{
+				$this->SetMessage('Choix non ajouté');
+			}
+		}
+		$this->Redirect($id, 'assign_user_idoption', $returnid, array('id_inscription'=>$id_inscription, 'genid'=>$genid, 'details'=>1));
+	}
+	
+	case "refresh" : 
+		if(isset($params['id_inscription']) && $params['id_inscription'] != '')
+		{
+			$id_inscription = $params['id_inscription'];
+			$del = $insc_ops->delete_all_responses($id_inscription);
+		}
+		$this->RedirectToAdminTab('inscriptions');
+	break;
 }

@@ -1,15 +1,14 @@
-<div class="table-responsive">
-	<p> Salut {$prenom} ! </p>
-						<span style="display:none;">{$compteur}
+
+              <div class="table-responsive">
+						<span style="display:hidden;">{$compteur}
 						{$choix_multi}</span>
 						{$formstart}
 						{$id_inscription}
 						
-						{$genid}{*la licence de l'adhérent*}
+						{$record_id}{*la licence de l'adhérent*}
 					
 						<div class="pageoverflow">
-						  <h4>{$titre}</h4>
-						  <p>{$description}</p>
+						  <p class="pagetext">Nom:</p>
 						
 							{if $choix_multi == true}
 								{for $foo=1 to $compteur}
@@ -25,6 +24,5 @@
 						    <p class="pageinput">{$submit}{$cancel}</p>
 						  </div>
 						{$formend}
-			<p>Tu pourras modifier ton choix depuis l'espace privé dans la page "Mon compte" dans le menu ci-dessus</p>
-</div>
-	
+						</div>
+					</div>

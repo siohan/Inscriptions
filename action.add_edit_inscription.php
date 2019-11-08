@@ -2,83 +2,173 @@
 
 if( !isset($gCms) ) exit;
 
-	if (!$this->CheckPermission('Inscriptions use'))
-  	{
-    		echo $this->ShowErrors($this->Lang('needpermission'));
-		return;
-   
-  	}
-
-	if( isset($params['cancel']) )
-  	{
-    		$this->RedirectToAdminTab('cotisations');
-    		return;
-  	}
-//debug_display($params, 'Parameters');
-$db =& $this->GetDb();
-//s'agit-il d'une modif ou d'une créa ?
-$record_id = '';
-$index = 0;
-$libelle = '';
-$actif = 0;
-$edit = 0;
-$insc_ops = new T2t_inscriptions;
-$adh_ops = new groups;
-$liste_groupes = $adh_ops->liste_groupes();
-if(isset($params['record_id']) && $params['record_id'] !="")
+if (!$this->CheckPermission('Inscriptions use'))
 {
-		$record_id = $params['record_id'];
-		$edit = 1;//on est bien en train d'éditer un enregistrement
-		//ON VA CHERCHER l'enregistrement en question
-		$details = $insc_ops->details_inscriptions($record_id);
-		
+    	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;
+   
 }
-$OuiNon = array('Oui'=>'1', 'Non'=>'0');	
-	
-	
-	//on construit le formulaire
-	$smarty->assign('formstart',
-			    $this->CreateFormStart( $id, 'do_add_edit_inscription', $returnid ) );
-	if($edit==1)
+
+if( isset($params['cancel']) )
+{
+    $this->RedirectToAdminTab('cotisations');
+    return;
+}
+//debug_display($_POST, 'Parameters');
+$insc_ops = new T2t_inscriptions;
+if(!empty($_POST))
+{
+	if(isset($_POST['cancel']))
 	{
-		$smarty->assign('record_id',
-				$this->CreateInputHidden($id,'record_id',$record_id));
+		$this->RedirectToAdminTab();
+	}
+
+	$error = 0;
+	$edit = 0;
 		
+
+
+			if (isset($_POST['record_id']) && $_POST['record_id'] !='')
+			{
+				$record_id = $_POST['record_id'];
+				$edit = 1;
+
+			}
+
+			if (isset($_POST['nom']) && $_POST['nom'] !='')
+			{
+				$nom = $_POST['nom'];
+			}
+			else
+			{
+				$error++;
+			}
+			if (isset($_POST['description']) && $_POST['description'] !='')
+			{
+				$description = $_POST['description'];
+			}
+			$date_limite = mktime($_POST['limite_Hour'], $_POST['limite_Minute'], $_POST['limite_Second'],$_POST['limite_Month'], $_POST['limite_Day'], $_POST['limite_Year']);
+			$timbre = mktime($_POST['envoi_Hour'], $_POST['envoi_Minute'], $_POST['envoi_Second'],$_POST['envoi_Month'], $_POST['envoi_Day'], $_POST['envoi_Year']);
+			$date_debut = mktime($_POST['debut_Hour'], $_POST['debut_Minute'], $_POST['debut_Second'],$_POST['debut_Month'], $_POST['debut_Day'], $_POST['debut_Year']);
+			$date_fin = mktime($_POST['fin_Hour'], $_POST['fin_Minute'], $_POST['fin_Second'],$_POST['fin_Month'], $_POST['fin_Day'], $_POST['fin_Year']);
+			
+		
+			if ($date_fin < $date_debut)
+			{
+				$date_fin = $date_debut;
+			}
+		
+			if ($date_limite < $date_fin)
+			{
+
+				$date_limite = $date_debut;
+			}
+
+
+			
+			if (isset($_POST['actif']) && $_POST['actif'] !='')
+			{
+				$actif = $_POST['actif'];
+			}
+			if (isset($_POST['groupe']) && $_POST['groupe'] !='')
+			{
+				$groupe = $_POST['groupe'];
+			}
+
+			if (isset($_POST['choix_multi']) && $_POST['choix_multi'] !='')
+			{
+				$choix_multi = $_POST['choix_multi'];
+			}
+
+			if($error < 1)
+			{
+				if($edit == 0)
+				{
+					$add = $insc_ops->add_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $choix_multi,$timbre);
+					if(true === $add)
+					{
+						$this->SetMessage('Inscription ajoutée');
+					}
+					else
+					{
+						$this->SetMessage('Inscription non ajoutée !!');
+					}
+				}
+				else
+				{
+					$edit = $insc_ops->edit_inscription($record_id,$nom, $description, $date_limite, $date_debut, $date_fin, $actif,$groupe, $choix_multi,$timbre);
+					if(true === $edit)
+					{
+						$this->SetMessage('Inscription modifiée');
+					}
+					else
+					{
+						$this->SetMessage('Inscription non modifiée !!');
+					}
+				}
+			}
+			else
+			{
+				$this->SetMessage('Il manque le nom !');
+			}
+
+
+	$this->RedirectToAdminTab('inscriptions');//($id,'add_types_cotis_categ',$returnid, array('record_id'=>$record_id));
+	
+}
+else
+{
+	$gp_ops = new groups;
+	$liste_groupes = $gp_ops->liste_groupes_dropdown();
+	
+	$record_id = '';
+	$edit = 0;//on est bien en train d'éditer un enregistrement
+	//ON VA CHERCHER l'enregistrement en question
+	$nom = '';
+	$description = '';
+	$date_limite = time();
+	$date_debut = time();
+	$date_fin = time();
+	$actif = 1;
+	$groupe = 1;
+	$choix_multi = 1;
+	$timbre = time()
+;	
+	if(isset($params['record_id']) && $params['record_id'] !="")
+	{
+			$record_id = $params['record_id'];
+			$edit = 1;//on est bien en train d'éditer un enregistrement
+			//ON VA CHERCHER l'enregistrement en question
+			$details = $insc_ops->details_inscriptions($record_id);
+			$nom = $details['nom'];
+			$description = $details['description'];
+			$date_limite = $details['date_limite'];
+			$date_debut = $details['date_debut'];
+			$date_fin = $details['date_fin'];
+			$actif = $details['actif'];
+			$groupe = $details['groupe'];
+			$choix_multi = $details['choix_multi'];
+			$timbre = $details['timbre'];
+			
+
 	}
 	
+	$tpl = $smarty->CreateTemplate($this->GetTemplateResource('add_edit_inscription.tpl'), null, null, $smarty);
+	$tpl->assign('record_id', $record_id);
+	$tpl->assign('edit', $edit);
+	$tpl->assign('actif', $actif);
+	$tpl->assign('nom', $nom);
+	$tpl->assign('description', $description);
+	$tpl->assign('date_limite', $date_limite);
+	$tpl->assign('date_debut', $date_debut);
+	$tpl->assign('date_fin', $date_fin);
+	$tpl->assign('groupe', $groupe);
+	$tpl->assign('timbre', $timbre);
+	$tpl->assign('liste_groupes', $liste_groupes);
+	$tpl->assign('choix_multi', $choix_multi);
+	$tpl->display();
 	
-	$smarty->assign('nom',
-			$this->CreateInputText($id,'nom',(isset($details['nom'])?$details['nom']:""),50,200));
-	$smarty->assign('description',
-			$this->CreateInputText($id,'description',(isset($details['description'])?$details['description']:""),50,200));
-	$smarty->assign('date_limite',
-			$this->CreateInputDate($id,'date_limite',(isset($details['date_limite'])?$details['date_limite']:"")));
-	$smarty->assign('date_debut',
-			$this->CreateInputDate($id,'date_debut',(isset($details['date_debut'])?$details['date_debut']:"")));
-	$smarty->assign('date_fin',
-			$this->CreateInputDate($id,'date_fin',(isset($details['date_fin'])?$details['date_fin']:"")));
-	
-	$smarty->assign('actif',
-			$this->CreateInputDropdown($id,'actif',$OuiNon,$selectedindex = $index, $selectedvalue=(isset($details['actif'])?$details['actif']:"")));
-	$smarty->assign('groupe',
-			$this->CreateInputDropdown($id,'groupe',$liste_groupes,$selectedindex = $index, $selectedvalue=(isset($details['groupe'])?$details['groupe']:"")));
-	$smarty->assign('choix_multi',
-			$this->CreateInputDropdown($id,'choix_multi',$OuiNon,$selectedindex = $index, $selectedvalue=(isset($details['choix_multi'])?$details['choix_multi']:'Oui')));
-	$smarty->assign('submit',
-			$this->CreateInputSubmit($id, 'submit', $this->Lang('submit'), 'class="button"'));
-	$smarty->assign('cancel',
-			$this->CreateInputSubmit($id,'cancel',
-						$this->Lang('cancel')));
-
-
-	$smarty->assign('formend',
-			$this->CreateFormEnd());
-	
-	
-
-
-
-echo $this->ProcessTemplate('add_edit_inscription.tpl');
+}
 
 #
 # EOF
