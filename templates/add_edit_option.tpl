@@ -33,13 +33,13 @@
 <div class="c_full cf">
 	<label class="grid_3">Date de début</label>
 		<div class="grid_8">
-			{html_select_date start_year='2019' end_year='+20' prefix='debut_' time=$date_debut}@ {html_select_time time=$dtae_debut prefix='debut_'}{*<input type="date" name="date_debut" value="{$date_debut}">*}{cms_help key='help_date_debut' title='Date de début'}
+			{html_select_date start_year='2019' end_year='+20' prefix='debut_' time=$date_debut}@ {html_select_time time=$date_debut prefix='debut_'}{*<input type="date" name="date_debut" value="{$date_debut}">*}{cms_help key='help_date_debut' title='Date de début'}
 		</div>
 </div>
 <div class="c_full cf">
 		<label class="grid_3">Date de fin</label>
 		<div class="grid_8">
-			{html_select_date start_year='2019' end_year='+20' prefix='fin_' time=$date_debut }@ {html_select_time time=$date_debut prefix='fin_'}{*<input type="date" name="date_fin" value="{$date_fin}">*}{cms_help key='help_date_fin' title='Date de fin'}
+			{html_select_date start_year='2019' end_year='+20' prefix='fin_' time=$date_fin }@ {html_select_time time=$date_fin prefix='fin_'}{*<input type="date" name="date_fin" value="{$date_fin}">*}{cms_help key='help_date_fin' title='Date de fin'}
 		</div>
 </div>
 <div class="c_full cf">

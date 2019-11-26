@@ -115,11 +115,14 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 							$retourid = $this->GetPreference('pageid_inscriptions');
 							$page = $cg_ops->resolve_alias_or_id($retourid);
 							$lien = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels));
+							$lien_recap = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels, "recap"=>"1"));
+							
 							$montpl = $this->GetTemplateResource('relanceemail.tpl');						
 							$smarty = cmsms()->GetSmarty();
 							// do not assign data to the global smarty
 							$tpl = $smarty->createTemplate($montpl);
 							$tpl->assign('lien',$lien);
+							$tpl->assign('lien_recap',$lien_recap);
 							$tpl->assign('titre',$titre);
 							$tpl->assign('description',$description);
 						 	$output = $tpl->fetch();
@@ -153,6 +156,7 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 							$ar = 0;
 							$email_contact = "rien";
 						}
+					//	unset();
 
 						$add_to_recipients = $mess_ops->add_messages_to_recipients($message_id, $sels, $email_contact,$senttouser,$status, $ar);
 					}

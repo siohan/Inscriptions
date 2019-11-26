@@ -34,8 +34,10 @@ $lang['help_nom_inscription'] = 'Donnez un nom évocateur pour votre événement
 $lang['help_date_limite'] = 'Passée la date limite, il sera impossible d\'envoyer des relances et de s\'inscrire';
 $lang['help_date_debut'] = 'Entrez la date de début votre événement';
 $lang['help_date_fin'] = 'Entrez la date de fin votre événement; Si nul, la date de début sera appliquée';
+$lang['help_duplication_time'] = 'Définissez l\'intervalle de temps entre la source et la copie !';
 $lang['help_actif'] = 'Activez ou désactivez votre événement. Si inactif, les relances et les inscriptions sont stoppées.';
 $lang['help_groupe'] = 'Choisissez le groupe à qui envoyer les inscriptions pour votre événement';
+$lang['help_groupe_notif'] = 'Choisissez quel groupe va recevoir les notifications des inscriptions via email';
 $lang['help_choix_multi'] = 'Si plusieurs réponses sont possibles, choisissez Oui. Sinon Non. Vous pouvez changer cela à tout moment dans ce formulaire ou en cliquant sur le chevron grisé ou vert';
 $lang['help_pageid_inscription'] = 'Vous devez indiquez l\'alias de la page de contenu dans laquelle vous devez implémenter la balise (voir aide sur le module) ';
 $lang['help_envoi'] = 'L\'envoi pourra être programmé (à venir) et nécessitera le module Messages';
@@ -46,9 +48,13 @@ $lang['help'] = '<h3>Que fait ce module ?</h3>
 <h3>Envoi de notifications</h3>
 <p>Envoyer des notifications par emails au groupe choisi pour l\'inscription. Un lien est automatiquement généré dans le courriel. Les utilisateurs répondent en cliquant sur ce lien.<br />
 Pour les utilisateurs ayant déjà répondu, il n\'y a pas de nouvelles relances.</p> 
-<p>Pour recueillir les réponses, vous devez au préalable implémenter la balise suivante dans une de vos pages :<code>{cms_module module=\'Inscriptions\'}</code></p>
-<h3>Important</h3>
-<p>Pour fonctionner correctement, vous devez obligatoirement renseigner l\'alias de la page des inscription dans l\'onglet "Emails".</p>
+<p>Pour recueillir les réponses, vous devez au préalable implémenter la balise suivante dans une de vos pages :<code>{cms_module module=\'Inscriptions\'}</code> et obligatoirement renseigner l\'alias de la page dans l\'onglet "Config". </p>
+<p>Selon l\'activité du site, des notifications pour des nouvelles inscriptions peuvent être envoyées au groupe à notifier avec un lien vers la page contenant la liste des inscriptions.</p>
+<h3>Duplication</h3>
+<p>Ne perdez plus de temps à créer des inscriptions, dupliquez-les ! En dupliquant une inscription, vous en créer une nouvelle avec les éléments de la source y compris les options (m^me celles inactives). Seules les adhésions ne sont pas copiées.</p>
+<p>Dupliquez également vos options une à une si vous le souhaitez.</p>
+<h3>Onglet Config</h3>
+<p>Retrouvez l\'élément duplication : ce dernier constitue l\'intervalle de temps entre la source et la copie soit de votre inscription, soit de l\'option.</p>
 <h3>Divers</h3>
 <ul>
 <li>Pour obtenir la dernière version en cours (avant release officielle)

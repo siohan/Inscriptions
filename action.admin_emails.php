@@ -57,7 +57,7 @@ if ($dbresult && $dbresult->RecordCount() > 0)
 	$onerow->date_fin= $row['date_fin'];
 	$onerow->tarif = $row['tarif'];
 	$onerow->inscrits = $insc_ops->count_users_in_option($row['id']);
-	$onerow->duplicate= $this->CreateLink($id, 'inscription', $returnid, $themeObject->DisplayImage('icons/system/copy.gif', $this->Lang('copy'), '', '', 'systemicon'),array('obj'=>'duplicate_option','id_inscription'=>$row['id_inscription'],'record_id'=>$row['id']));
+//	$onerow->editlink= $this->CreateLink($id, 'add_edit_option', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'),array('id_inscription'=>$row['id_inscription'],'record_id'=>$row['id']));
 	$onerow->editlink= $this->CreateLink($id, 'add_edit_option', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'),array('id_inscription'=>$row['id_inscription'],'record_id'=>$row['id']));
 	$onerow->view= $this->CreateLink($id, 'admin_resp_by_option', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view'), '', '', 'systemicon'),array('id_option'=>$row['id'], 'id_inscription'=>$row['id_inscription']));
 	$onerow->delete= $this->CreateLink($id, 'inscription', $returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'),array('obj'=>'delete_option','record_id'=>$row['id'], 'id_inscription'=>$row['id_inscription']));

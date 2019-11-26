@@ -40,7 +40,7 @@ $(document).ready(function(){
 		<th>Inscrit(s)</th>
 		<th>Choix multi</th>
 		<th>Groupe</th>
-		<th colspan="2">Action(s)</th>
+		<th colspan="3">Action(s)</th>
 		<!--<th><input type="checkbox" id="selectall" name="selectall"></th>-->
 	</tr>
  </thead>
@@ -49,7 +49,7 @@ $(document).ready(function(){
   <tr class="{$entry->rowclass}">
 	<td>{$entry->id}</td>
 	<td>{$entry->nom}</td>
-	<td>{$entry->description}</td>
+	<td>{$entry->description|summarize:25}</td>
 	<td>{$entry->date_limite|date_format:"%d-%m-%Y"}</td>
 	<td>{$entry->date_debut|date_format:"%d-%m-%Y (%Hh%M)"}-{$entry->date_fin|date_format:"%d-%m-%Y (%Hh%M)"}</td>
 	<td>{$entry->actif}</td>
@@ -60,6 +60,7 @@ $(document).ready(function(){
 	<td>{$entry->choix_multi}</td>
 	<td>{$entry->groupe}</td>
 	<td>{$entry->editlink}</td> 
+	<td>{$entry->duplicate}</td> 
 	<td>{$entry->delete}</td> 
 <!--	<td><input type="checkbox" name="{$actionid}sel[]" value="{$entry->id}" class="select"></td>-->
   </tr>

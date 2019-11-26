@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
 # Module: Inscriptions
-# Version: 0.4, Claude SIOHAN
+# Version: 0.5, Claude SIOHAN
 # Method: Install
 #-------------------------------------------------------------------------
 
@@ -37,6 +37,7 @@ $flds = "
 	actif I(1) DEFAULT 0,
 	groupe I(3) DEFAULT 0,
 	choix_multi I(1),
+	group_notif I(3),
 	timbre I(11)";
 	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_inscriptions", $flds, $taboptarray);
 	$dict->ExecuteSQLArray($sqlarray);			
@@ -91,14 +92,14 @@ if( file_exists( $fn ) )
 	$template = file_get_contents( $fn );
 	$this->SetTemplate('relanceemail',$template);
 }
-/*
+
 $fn = cms_join_path(dirname(__FILE__),'templates','orig_send_email.tpl');
 if( file_exists( $fn ) )
 {
 	$template = file_get_contents( $fn );
 	$this->SetTemplate('send_email',$template);
 }
-*/
+
 # Les index
 //on créé un index sur la table
 $idxoptarray = array('UNIQUE');

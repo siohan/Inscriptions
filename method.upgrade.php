@@ -138,8 +138,24 @@ switch($current_version)
 		$dict->ExecuteSQLArray($sqlarray);
 		
 		$this->SetPreference('pageid_inscriptions', '');
-	}	
+	}
 	
+	case "0.4" :
+	{
+		
+		$fn = cms_join_path(dirname(__FILE__),'templates','orig_send_email.tpl');
+		if( file_exists( $fn ) )
+		{
+			$template = file_get_contents( $fn );
+			$this->SetTemplate('send_email',$template);
+		}
+		
+		
+	
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_inscriptions_inscriptions", "group_notif I(3)");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+	}
 
 }
 // put mention into the admin log

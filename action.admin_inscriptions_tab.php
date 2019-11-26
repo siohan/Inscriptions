@@ -83,6 +83,7 @@ if ($dbresult)
 		$onerow->refresh = $this->CreateLink($id, 'inscription', $returnid, 'RAZ', array('obj'=>'refresh','id_inscription'=>$row['id']));
 		$onerow->view= $this->CreateLink($id, 'admin_reponses', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view'), '', '', 'systemicon'),array('id_inscription'=>$row['id']));
 		$onerow->editlink= $this->CreateLink($id, 'add_edit_inscription', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'),array('record_id'=>$row['id']));
+		$onerow->duplicate= $this->CreateLink($id, 'inscription', $returnid, $themeObject->DisplayImage('icons/system/copy.gif', $this->Lang('copy'), '', '', 'systemicon'),array('obj'=>'duplicate','record_id'=>$row['id']));
 		$onerow->delete= $this->CreateLink($id, 'inscription', $returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'),array('obj'=>'delete_inscription','record_id'=>$row['id']),$warn_message='Attention, ceci supprimera les options et les adhésions des utilisateurs');
 		($rowclass == "row1" ? $rowclass= "row2" : $rowclass= "row1");
 		$rowarray[]= $onerow;

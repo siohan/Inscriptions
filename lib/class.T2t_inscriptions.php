@@ -10,7 +10,7 @@ class T2t_inscriptions
 function details_inscriptions($id_inscription)
 {
 	$db = cmsms()->GetDb();
-	$query = "SELECT id,nom, description, date_limite, date_debut, date_fin, actif, groupe, choix_multi, timbre FROM ".cms_db_prefix()."module_inscriptions_inscriptions WHERE id = ?";
+	$query = "SELECT id,nom, description, date_limite, date_debut, date_fin, actif, groupe, choix_multi,group_notif, timbre FROM ".cms_db_prefix()."module_inscriptions_inscriptions WHERE id = ?";
 	$dbresult = $db->Execute($query, array($id_inscription));
 	$details = array();
 	if($dbresult)
@@ -25,6 +25,7 @@ function details_inscriptions($id_inscription)
 			$details['date_fin'] = $row['date_fin'];
 			$details['actif'] = $row['actif'];
 			$details['groupe'] = $row['groupe'];
+			$details['group_notif'] = $row['group_notif'];
 			$details['choix_multi'] = $row['choix_multi'];
 			$details['timbre'] = $row['timbre'];
 		}
@@ -34,11 +35,11 @@ function details_inscriptions($id_inscription)
 
 }
 //ajoute une inscription
-function add_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $choix_multi)
+function add_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe,$group_notif, $choix_multi)
 {
 	$db = cmsms()->GetDb();
-	$query = "INSERT INTO ".cms_db_prefix()."module_inscriptions_inscriptions (nom, description, date_limite, date_debut, date_fin, actif, groupe, choix_multi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $choix_multi));
+	$query = "INSERT INTO ".cms_db_prefix()."module_inscriptions_inscriptions (nom, description, date_limite, date_debut, date_fin, actif, groupe,group_notif, choix_multi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe,$group_notif, $choix_multi));
 	if($dbresult)
 	{
 		return true;
@@ -48,12 +49,27 @@ function add_inscription($nom, $description, $date_limite, $date_debut, $date_fi
 		return false;
 	}
 }
-##
-function edit_inscription($record_id,$nom, $description,$date_limite, $date_debut, $date_fin, $actif,$groupe, $choix_multi)
+//duplique une inscription et renvoie le last_insert
+function duplicate_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $group_notif, $choix_multi)
 {
 	$db = cmsms()->GetDb();
-	$query = "UPDATE ".cms_db_prefix()."module_inscriptions_inscriptions SET nom = ?, description = ?, date_limite = ?, date_debut = ?, date_fin = ?, actif = ?, groupe = ?, choix_multi = ? WHERE id = ?";
-	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $choix_multi, $record_id));
+	$query = "INSERT INTO ".cms_db_prefix()."module_inscriptions_inscriptions (nom, description, date_limite, date_debut, date_fin, actif, groupe, group_notif, choix_multi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe,$group_notif, $choix_multi));
+	if($dbresult)
+	{
+		return $db->insert_Id();
+	}
+	else
+	{
+		return false;
+	}
+}
+##
+function edit_inscription($record_id,$nom, $description,$date_limite, $date_debut, $date_fin, $actif,$groupe,$group_notif, $choix_multi)
+{
+	$db = cmsms()->GetDb();
+	$query = "UPDATE ".cms_db_prefix()."module_inscriptions_inscriptions SET nom = ?, description = ?, date_limite = ?, date_debut = ?, date_fin = ?, actif = ?, groupe = ?, group_notif = ?, choix_multi = ? WHERE id = ?";
+	$dbresult = $db->Execute($query, array($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe,$group_notif, $choix_multi, $record_id));
 	if($dbresult)
 	{
 		return true;
@@ -180,6 +196,7 @@ function details_option($record_id)
 
 
 }
+
 //ajoute une option à une inscription
 function add_option($id_inscription,$nom, $description, $date_debut, $date_fin, $actif, $tarif, $timbre)
 {
@@ -334,6 +351,48 @@ function search_id_option($id_inscription, $nom)
 		return false;
 	}
 		
+	
+}
+//pour dupliquer les options d'une inscription 
+function duplicate_options($id_inscription, $last_insert,$duplication_time)
+{
+	//on récupère d'abord les options de l'inscription qu'on copie
+	$db = cmsms()->GetDb();
+	$query = "SELECT nom, description, date_debut, date_fin, actif, tarif, timbre FROM ".cms_db_prefix()."module_inscriptions_options WHERE id_inscription = ?";
+	$dbresult = $db->Execute($query, array($id_inscription));
+	if($dbresult && $dbresult->RecordCount()>0)
+	{
+		while($row = $dbresult->FetchRow())
+		{
+			$date_debut = $row['date_debut'] + $duplication_time;
+			$date_fin = $row['date_fin'] + $duplication_time;
+			$add_opts = $this->add_option($last_insert,$row['nom'], $row['description'], $date_debut, $date_fin, $row['actif'], $row['tarif'], $row['timbre']);
+		}
+	}
+	
+}
+//pour dupliquer une seule option ! 
+function duplicate_option($record_id,$duplication_time)
+{
+	//on récupère d'abord les options de l'inscription qu'on copie
+	$db = cmsms()->GetDb();
+//	$duplication_time = $this->GetPreference('duplication_time');
+	$query = "SELECT id_inscription,nom, description, date_debut, date_fin, actif, tarif, timbre FROM ".cms_db_prefix()."module_inscriptions_options WHERE id = ?";
+	$dbresult = $db->Execute($query, array($record_id));
+	if($dbresult && $dbresult->RecordCount()>0)
+	{
+		while($row = $dbresult->FetchRow())
+		{
+			$date_debut = $row['date_debut'] + $duplication_time;
+			$date_fin = $row['date_fin'] + $duplication_time;
+			$add_opts = $this->add_option($row['id_inscription'],$row['nom'], $row['description'], $date_debut, $date_fin, $row['actif'], $row['tarif'], $row['timbre']);
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 	
 }
 //les réponses
@@ -552,6 +611,7 @@ function datetotimestamp($date_limite)
 
         return $timestamp;
 }
+
 ##
 #END OF CLASS
 }

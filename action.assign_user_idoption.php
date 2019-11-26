@@ -1,6 +1,6 @@
 <?php
 if (!isset($gCms)) exit;
-debug_display($params,'Parameters');
+//debug_display($params,'Parameters');
 global $themeObject;
 
 if(isset($params['id_inscription']) && $params['id_inscription'] !='')
@@ -10,6 +10,7 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 	$insc_ops = new T2t_inscriptions;
 	$detailsInsc = $insc_ops->details_inscriptions($id_inscription);
 	$choix_multi = $detailsInsc['choix_multi'];
+	$smarty->assign('id_inscription', $id_inscription);
 //	var_dump($choix_multi); 
 }
 $details=0;

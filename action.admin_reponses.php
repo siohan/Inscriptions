@@ -57,8 +57,16 @@ if ($dbresult && $dbresult->RecordCount() > 0)
 	
 		$id_option = (int) $row['id_option'];
 		$prix = $insc_ops->details_option($id_option);
-		var_dump($prix);
-		$price = $prix['tarif'];
+		//var_dump($id_option);
+		if($id_option == 0)
+		{
+			$price = 0;
+		}
+		else
+		{
+			$price = $prix['tarif'];
+		}
+		
 		$onerow= new StdClass();
 		$onerow->rowclass= $rowclass;
 		$genid = $row['genid'];

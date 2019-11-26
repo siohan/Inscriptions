@@ -2,7 +2,7 @@
 
 #-------------------------------------------------------------------------
 # Module : Inscriptions - 
-# Version : 0.3, Sc
+# Version : 0.5, Sc
 # Auteur : Claude SIOHAN
 #-------------------------------------------------------------------------
 /**
@@ -20,7 +20,7 @@ class Inscriptions extends CMSModule
   
   function GetName() { return 'Inscriptions'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.4'; }  
+  function GetVersion() { return '0.5'; }  
   function GetHelp() { return $this->Lang('help'); }   
   function GetAuthor() { return 'Claude SIOHAN'; } 
   function GetAuthorEmail() { return 'claude.siohan@gmail.com'; }
@@ -66,6 +66,7 @@ class Inscriptions extends CMSModule
 	$this->SetParameterType('obj', CLEAN_NONE);
 	$this->SetParameterType('choix_multi', CLEAN_INT);
 	$this->SetParameterType('groupe', CLEAN_INT);
+	$this->SetParameterType('recap', CLEAN_INT);
 	
 	//form parameters
 	$this->SetParameterType('submit',CLEAN_STRING);
@@ -90,7 +91,7 @@ public function HasCapability($capability, $params = array())
 public function get_tasks()
 {
    $obj = array();
-//	$obj[0] = new reponsesTask();
+	$obj[0] = new reponsesTask();
  //  	$obj[0] = new sendTask();  
 	
 return $obj; 

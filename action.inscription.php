@@ -10,6 +10,7 @@ if(!$this->CheckPermission('Adherents use'))
 $db =& $this->GetDb();
 global $themeObject;
 $aujourdhui = date('Y-m-d');
+$duplication_time = $this->GetPreference('duplication_time');
 $insc_ops = new T2t_inscriptions;
 debug_display($params, 'Parameters');
 if(isset($params['obj']) && $params['obj'] != '')
@@ -88,7 +89,7 @@ switch($obj)
 		if(true === $del_opt)
 		{
 			//supprime les adhésions à une (et une seule) option donnée
-			$del_belongs = $insc_ops->delete_option_belongs($record_id);
+			$del_belongs = $insc_ops->delete_inscription_belongs($record_id);
 		}
 		
 	}
@@ -193,5 +194,42 @@ switch($obj)
 			$del = $insc_ops->delete_all_responses($id_inscription);
 		}
 		$this->RedirectToAdminTab('inscriptions');
+	break;
+	
+	case "duplicate" :
+	if(isset($params['record_id']) && $params['record_id'] != '')
+	{
+		$id_inscription = $params['record_id'];
+		$details = $insc_ops->details_inscriptions($id_inscription);
+		$date_limite = $details['date_limite'] + $duplication_time;
+		$date_debut = $details['date_debut']+$duplication_time;
+		$date_fin = $details['date_fin'] + $duplication_time;
+		$add_insc = $insc_ops->duplicate_inscription($details['nom'], $details['description'], $date_limite, $date_debut, $date_fin, $details['actif'], $details['groupe'], $details['group_notif'], $details['choix_multi']);
+		//var_dump($add_insc);
+		if(FALSE != $add_insc)
+		{
+			//il faut récupérer l'id du dernier élément inséré.
+			
+			$details_opts = $insc_ops->duplicate_options($id_inscription, $add_insc,$duplication_time);
+		}
+		else
+		{
+			//on envoie un mesage d'erreur
+		}
+		
+	}
+	$this->RedirectToAdminTab('inscriptions');
+	break;
+	
+	case "duplicate_option" :
+	if(isset($params['record_id']) && $params['record_id'] != '')
+	{
+		$copy = $insc_ops->duplicate_option($params['record_id'],$duplication_time);
+		var_dump($copy);
+	}
+	if(isset($params['id_inscription']) && $params['id_inscription'] != '')
+	{
+		$this->Redirect($id, 'admin_options', $returnid, array('record_id'=>$params['id_inscription'] ));
+	}
 	break;
 }

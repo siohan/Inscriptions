@@ -74,6 +74,10 @@ if(!empty($_POST))
 			{
 				$groupe = $_POST['groupe'];
 			}
+			if (isset($_POST['group_notif']) && $_POST['group_notif'] !='')
+			{
+				$group_notif = $_POST['group_notif'];
+			}
 
 			if (isset($_POST['choix_multi']) && $_POST['choix_multi'] !='')
 			{
@@ -84,7 +88,7 @@ if(!empty($_POST))
 			{
 				if($edit == 0)
 				{
-					$add = $insc_ops->add_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe, $choix_multi,$timbre);
+					$add = $insc_ops->add_inscription($nom, $description, $date_limite, $date_debut, $date_fin, $actif, $groupe,$group_notif, $choix_multi,$timbre);
 					if(true === $add)
 					{
 						$this->SetMessage('Inscription ajoutée');
@@ -96,7 +100,7 @@ if(!empty($_POST))
 				}
 				else
 				{
-					$edit = $insc_ops->edit_inscription($record_id,$nom, $description, $date_limite, $date_debut, $date_fin, $actif,$groupe, $choix_multi,$timbre);
+					$edit = $insc_ops->edit_inscription($record_id,$nom, $description, $date_limite, $date_debut, $date_fin, $actif,$groupe,$group_notif, $choix_multi,$timbre);
 					if(true === $edit)
 					{
 						$this->SetMessage('Inscription modifiée');
@@ -131,6 +135,7 @@ else
 	$date_fin = time();
 	$actif = 1;
 	$groupe = 1;
+	$group_notif = 1;
 	$choix_multi = 1;
 	$timbre = time()
 ;	
@@ -147,6 +152,7 @@ else
 			$date_fin = $details['date_fin'];
 			$actif = $details['actif'];
 			$groupe = $details['groupe'];
+			$group_notif = $details['group_notif'];
 			$choix_multi = $details['choix_multi'];
 			$timbre = $details['timbre'];
 			
@@ -163,6 +169,7 @@ else
 	$tpl->assign('date_debut', $date_debut);
 	$tpl->assign('date_fin', $date_fin);
 	$tpl->assign('groupe', $groupe);
+	$tpl->assign('group_notif', $group_notif);
 	$tpl->assign('timbre', $timbre);
 	$tpl->assign('liste_groupes', $liste_groupes);
 	$tpl->assign('choix_multi', $choix_multi);

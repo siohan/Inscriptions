@@ -36,7 +36,13 @@
 	<div class="c_full cf">
 		<label class="grid_3">Groupe concerné</label>
 		<div class="grid_8">
-			<select name="groupe">{html_options options=$liste_groupes selected=$group_id}</select>{cms_help key='help_groupe' title='Groupe pour les réponses'}
+			<select name="groupe">{html_options options=$liste_groupes selected=$groupe}</select>{cms_help key='help_groupe' title='Groupe concerné'}
+		</div>
+	</div>
+	<div class="c_full cf">
+		<label class="grid_3">Groupe à notifier des réponses</label>
+		<div class="grid_8">
+			<select name="group_notif">{html_options options=$liste_groupes selected=$group_notif}</select>{cms_help key='help_groupe_notif' title='Groupe concerné'}
 		</div>
 	</div>
 	<div class="c_full cf">
