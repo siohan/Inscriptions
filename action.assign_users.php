@@ -4,7 +4,7 @@ if( !isset($gCms) ) exit;
 ##                                                                ##
 ####################################################################
 //debug_display($params, 'Parameters');
-if (!$this->CheckPermission('Inscription use'))
+if (!$this->CheckPermission('Inscriptions use'))
 {
 	echo $this->ShowErrors($this->Lang('needpermission'));
 	return;

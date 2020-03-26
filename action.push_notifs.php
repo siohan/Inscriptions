@@ -84,7 +84,6 @@ if($dbresult)
 		//	$cmsmailer->SetPriority($priority);
 			$cmsmailer->SetBody($body);
 			$cmsmailer->SetSubject($subject);
-			$cmsmailer->Send();
 	                if( !$cmsmailer->Send() ) 
 			{			
 	                    	//$mess_ops->not_sent_emails($message_id, $recipients);

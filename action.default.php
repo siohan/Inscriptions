@@ -20,10 +20,10 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 	$titre = $details['nom'];
 	$smarty->assign('titre', $titre);
 	$smarty->assign('description', $description);
-	if($actif == 0 || $date3 - $date2 >0)
+	if($actif == 0 || $date3 - $date_limite >0)
 	{
 		echo 'Les inscriptions sont fermées ou la date limite de réponse est dépassée !';
-	//	$this->Redirect();exit;
+		$error++;
 	}
 }
 else
@@ -115,7 +115,7 @@ if($error < 1)
 		}
 		else
 		{
-			echo "Désolé, vous n'avez pas le droit de visionner les réponses à cette inscriptions";
+			echo "Désolé, vous n'avez pas le droit de visionner les réponses à cette inscription";
 		}
 		
 		
@@ -123,58 +123,91 @@ if($error < 1)
 	else
 	{
 		$db = cmsms()->GetDb();
-		$query = "SELECT id,nom, description, date_debut, tarif FROM ".cms_db_prefix()."module_inscriptions_options AS opt WHERE id_inscription = ? AND actif = 1 ";
+		$query = "SELECT id,nom, description, date_debut, tarif, jauge FROM ".cms_db_prefix()."module_inscriptions_options AS opt WHERE id_inscription = ? AND actif = 1 ";
 		$dbresult = $db->Execute($query, array($id_inscription));
 		if($dbresult && $dbresult->RecordCount()>0)
 		{
 			//on construit le formulaire de réponse
-			$smarty->assign('formstart',
-				$this->CreateFormStart($id,  'feu_do_edit_inscription', $returnid));
-				$smarty->assign('id_inscription', 
-				$this->CreateInputHidden($id, 'id_inscription', $id_inscription));
-				$smarty->assign('genid', 
-					$this->CreateInputHidden($id, 'genid', $genid));//attention choix multi ou pas ?
+			$tpl = $smarty->CreateTemplate($this->GetTemplateResource('feu_edit_inscription.tpl'), null, null, $smarty);
+			$tpl->assign('id_inscription', $id_inscription);
+			$tpl->assign('genid', $genid);
+		
 				$it = array();
 				$i = 0;
 				while($row = $dbresult->FetchRow())
 				{
-
-					$i++;
-					${'nom_'.$i} = $row['nom'];
-					$nom[] = $row['nom'];
-					${'value_'.$i} = $row['id'];
-					$id_opt[] = $row['id'];
-					$it[$row['nom']] = $row['id'];
-					$smarty->assign('nom_'.$i, $row['nom']);			
-				}
-
-				$smarty->assign('compteur',  $i);
-				$smarty->assign('choix_multi', $choix_multi);
-				$smarty->assign('choix_multi2', $this->createInputHidden($id, 'choix_multi2',$choix_multi));
-
-				for($a=1; $a<=$i;$a++)
-				{
-					//echo $a;
-					if($choix_multi == '0')//bouton radio
+					//on vérifie si l'option a déjà été choisie par le membre
+					$checked = $insc_ops->is_inscrit_opt($row['id'], $genid);
+					if(true == $checked)
 					{
-						$smarty->assign('nom', $this->CreateInputRadioGroup($id, 'nom', $it,$selectedvalue='', '','<br />'));//${'nom_'.$a}, ''));
+						$check = true;
+						$tpl->assign('check', true);
+					}
+					//on regarde si la jauge est ok
+					$jauge = $row['jauge'];
+					
+					if($jauge >0)//la jauge est activée ! le nb de places est limité
+					{
+						//on vérifie qu'il reste de la place !
+						$quota = $insc_ops->count_users_in_option($row['id']);
+						$places_restantes = $jauge-$quota;
+						
+							$i++;
+							if($places_restantes >0)
+							{
+								$tpl->assign('available_'.$i, true);
+							}
+							else
+							{
+								$tpl->assign('available_'.$i, false);
+							}
+							$checked = $insc_ops->is_inscrit_opt($row['id'], $genid);
+							if(true == $checked)
+							{
+								$tpl->assign('check_'.$i, true);
+							}
+							${'nom_'.$i} = $row['nom'];
+							$nom[] = $row['nom'];
+							${'value_'.$i} = $row['id'];
+							$id_opt[] = $row['id'];
+							$it[$row['nom']] = $row['id'];
+							$smarty->assign('nom_'.$i, $row['nom']);
+							$tpl->assign('nom_'.$i, $row['nom']);
+							$tpl->assign('places_restantes_'.$i, $places_restantes);
+									
 					}
 					else
 					{
-						$smarty->assign('name_'.$a, $this->CreateInputCheckbox($id, 'nom[]', ${'value_'.$a}));
-					}
+						$i++;
+						$checked = $insc_ops->is_inscrit_opt($row['id'], $genid);
+						if(true == $checked)
+						{
+							$tpl->assign('check_'.$i, true);
+						}
+						$tpl->assign('available_'.$i, true);
+						${'nom_'.$i} = $row['nom'];
+						$nom[] = $row['nom'];
+						${'value_'.$i} = $row['id'];
+						$id_opt[] = $row['id'];
+						$it[$row['nom']] = $row['id'];
+						$smarty->assign('nom_'.$i, $row['nom']);
+						$tpl->assign('nom_'.$i, $row['nom']);
+					}						
 				}
-
-				$smarty->assign('submit',
-					$this->CreateInputSubmit($id, 'submit', 'Envoyer', 'class="button"'));
-				$smarty->assign('cancel',
-					$this->CreateInputSubmit($id,'cancel',
-							'Annuler'));
-
-
-				$smarty->assign('formend',
-							$this->CreateFormEnd());
-				echo $this->ProcessTemplate('feu_edit_inscription.tpl');
+				$tpl->assign('compteur', $i);
+				$tpl->assign('choix_multi', $choix_multi);
+				$tpl->assign('choix_multi2', $choix_multi2);
+				
+				
+				
+				for($a=1; $a<=$i;$a++)
+				{
+					
+					$tpl->assign('name_'.$a, ${'value_'.$a});
+					//$tpl->assign('nom_'.$a, ${'nom'.$a});//$it);
+				}
+				$tpl->display();
+				
 		}
 	}
 }

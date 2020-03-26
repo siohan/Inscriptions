@@ -25,13 +25,14 @@ class reponsesTask implements CmsRegularTask
          $time = time();
       }
 
-      $last_execute = (int) $insc->GetPreference('last_updated');
+      	$last_execute = (int) $insc->GetPreference('last_updated');
+	$interval = (int) $insc->GetPreference('Interval');
      	
 
-      // Définition de la périodicité de la tâche (24h ici)
-      	if( $time - $last_execute >= 86400 )
+      // Définition de la périodicité de la tâche 
+      	if( $time >= $last_execute + $interval)
 	{
-		return TRUE; // hardcoded to 15 minutes
+		return TRUE; 
 	}
 	else
 	{
@@ -94,8 +95,7 @@ class reponsesTask implements CmsRegularTask
 								$row3 = $dbresult3->FetchRow();
 
 								$email_contact = $row3['contact'];
-								//var_dump($email_contact);
-
+							
 								if(!is_null($email_contact))
 								{
 									$destinataires[] = $email_contact;
@@ -142,13 +142,13 @@ class reponsesTask implements CmsRegularTask
 					{
 						
 						$cmsmailer->reset();
-
+						$cmsmailer->SetFrom('webmaster@agi-webconseil.fr');
 						$cmsmailer->AddAddress($value,$name='');
 						$cmsmailer->IsHTML(true);
 						$cmsmailer->SetPriority('1');
 						$cmsmailer->SetBody($output);
 						$cmsmailer->SetSubject($subject);
-						$cmsmailer->Send();
+						
 				                if( !$cmsmailer->Send() ) 
 						{			
 				                    	//$mess_ops->not_sent_emails($message_id, $recipients);
@@ -158,13 +158,17 @@ class reponsesTask implements CmsRegularTask
 						unset($value);
 					}
 					unset($destinataires);
-
+					return true;
 
 				
 				}
+				else
+				{
+					return false;
+				}
 			}//maintenant on va chercher s'il y a des nouvelles réponses
 						
-			return true;
+		//	return true;
 			
 			
 		

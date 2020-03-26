@@ -22,7 +22,7 @@ $(document).ready(function(){
 //]]>
 </script>
 <h2>Liste des réponses obtenues pour : {$titre}</h2>
-<div class="pageoptions"><p class="pageoptions"><a href="{cms_action_url action='admin_options' record_id=$id_inscription}">{admin_icon icon='back.gif'} Revenir</a> <br /> {$itemcount}&nbsp;{$itemsfound} &nbsp; {$add_edit}</p></div>
+<div class="pageoptions"><p class="pageoptions"><a href="{cms_action_url action='view_details_inscription' record_id=$id_inscription}">{admin_icon icon='back.gif'} Revenir</a> <br /> {$itemcount}&nbsp;{$itemsfound} &nbsp; {$add_edit}</p></div>
 {if $itemcount > 0}
 
 <table border="0" cellspacing="0" cellpadding="0" class="pagetable">

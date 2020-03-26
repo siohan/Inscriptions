@@ -44,8 +44,8 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 	{
 		$sendtime = date("H:i:s");
 	}
-	$mess_ops = new T2t_messages;
-	$time_envoi = $mess_ops->datetotimeunix($senddate, $sendtime);
+	
+	$time_envoi = $insc_ops->datetotimeunix($senddate, $sendtime);
 
 	$sent = 1;
 	if($time_envoi > $aujourdhui)
@@ -66,15 +66,23 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 		$replyto = $sender;
 		$gp_ops = new groups;
 		$recipients_number = $gp_ops->count_users_in_group($group_id);
-		$mess_ops = new T2t_messages;
-		$insc_ops = new T2t_inscriptions;
-		$timbre = time();
-		$mess = $mess_ops->add_message($sender, $senddate, $sendtime, $replyto, $group_id,$recipients_number, $subject, $description, $sent, $priority, $timbre);
-		$message_id =$db->Insert_ID();
+		$mod_messages = \cms_utils::get_module('Messages');
+		$mess_ok =0;
+		if (is_object($mod_messages) && true == $this->GetPreference('use_messages'))
+		{
+			$mess_ok = 1;
+			$mess_ops = new T2t_messages;
+			$insc_ops = new T2t_inscriptions;
+			$timbre = time();
+			$ar = 0;
+			$relance = 0;
+			$occurence = 0;
+			$mess = $mess_ops->add_message($sender, $senddate, $sendtime, $replyto, $group_id,$recipients_number, $subject, $description, $sent, $priority, $timbre, $ar, $relance, $occurence);
+			$message_id =$db->Insert_ID();
+		}
 		
 		
-		
-		if ($sent == 1)
+		if ($sent == 1) //pour un envoi immédiat
 		{
 			//on extrait les utilisateurs (genid) du groupe sélectionné
 			//attention, on élimine les utilisateurs ayant déjà répondu
@@ -88,12 +96,16 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 			$contacts_ops = new contact;
 			$adherents = $contacts_ops->UsersFromGroup($group_id);
 			$cg_ops = new CGExtensions;
-	
+			//var_dump($adherents);
+			$retourid = $this->GetPreference('pageid_inscriptions');
+			$page = $cg_ops->resolve_alias_or_id($retourid);
 			foreach($adherents as $sels)
 			{
 				//avant on envoie dans le module emails pour tous les utilisateurs et sans traitement
 				if(FALSE === $licences || FALSE === in_array($sels, $licences))
 				{
+					//on met les valeurs par défaut, on corrige ensuite
+					
 					$query = "SELECT contact FROM ".cms_db_prefix()."module_adherents_contacts WHERE genid = ? AND type_contact = 1 LIMIT 1";
 					$dbresult = $db->Execute($query, array($sels));
 					if($dbresult && $dbresult->RecordCount()>0)
@@ -101,52 +113,61 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 						$row = $dbresult->FetchRow();
 
 						$email_contact = $row['contact'];
+						var_dump($email_contact);
 						$destinataires = array();
 
 						if(!is_null($email_contact))
 						{
-							$destinataires['emails'] = $email_contact;
-							$destinataires['genid'] = $sels;
+							
 							$senttouser = 1;
 							$status = "Email Ok";
 							
 							$ar = 0;
 							//on consruit une url
-							$retourid = $this->GetPreference('pageid_inscriptions');
-							$page = $cg_ops->resolve_alias_or_id($retourid);
+							
 							$lien = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels));
-							$lien_recap = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels, "recap"=>"1"));
+							//$lien_recap = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels, "recap"=>"1"));
 							
 							$montpl = $this->GetTemplateResource('relanceemail.tpl');						
 							$smarty = cmsms()->GetSmarty();
 							// do not assign data to the global smarty
 							$tpl = $smarty->createTemplate($montpl);
 							$tpl->assign('lien',$lien);
-							$tpl->assign('lien_recap',$lien_recap);
+						//	$tpl->assign('lien_recap',$lien_recap);
 							$tpl->assign('titre',$titre);
 							$tpl->assign('description',$description);
 						 	$output = $tpl->fetch();
 						
 							$cmsmailer = new \cms_mailer();
-							$cmsmailer->reset();
-							$cmsmailer->AddAddress($email_contact);
+							
+							//$cmsmailer->SetSMTPDebug($flag = TRUE);
+							$cmsmailer->AddAddress($email_contact, $name='');
+					//		$cmsmailer->AddBCC('claude.siohan@gmail.com', $name="Webmaster RPF");
 							$cmsmailer->IsHTML(true);
 							$cmsmailer->SetPriority($priority);
 							$cmsmailer->SetBody($output);
 							$cmsmailer->SetSubject($subject);
-							$cmsmailer->Send();
-					                if( !$cmsmailer->Send() ) 
+							
+							
+					                if( !$cmsmailer->Send()  ) 
 							{			
-					                    	return false;
-								$mess_ops->not_sent_emails($message_id, $recipients);
+					                    	//return false;
+								if($mess_ok == 1)
+								{
+									$senttouser = 0;
+									$add_to_recipients = $mess_ops->add_messages_to_recipients($message_id, $sels, $email_contact,$output,$senttouser,$status, $ar);
+								}
 					                }
-					
-						//	$envoi = $insc_ops->send_normal_email($sender, $email_contact,$subject, $priority, $lien);
-						/*	if(FALSE === $envoi)
+							else
 							{
-								$mess_ops->not_sent_emails($message_id, $recipients);
+								if($mess_ok == 1)
+								{
+									$senttouser = 1;
+									$add_to_recipients = $mess_ops->add_messages_to_recipients($message_id, $sels, $email_contact, $output, $senttouser,$status, $ar);
+								}
 							}
-						*/	
+						$cmsmailer->reset();
+						
 						}
 						else
 						{
@@ -156,11 +177,11 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 							$ar = 0;
 							$email_contact = "rien";
 						}
-					//	unset();
+						unset($email_contact);
 
-						$add_to_recipients = $mess_ops->add_messages_to_recipients($message_id, $sels, $email_contact,$senttouser,$status, $ar);
+						
 					}
-					else
+					else //pas de résultats à la requete des contacts emails
 					{
 						//une erreur sur l'email, on fait quoi ?
 						//on indique l'erreur : pas d'email disponible !
@@ -172,21 +193,18 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 						
 					}
 				}
-			}
-				
-				
-			
+			}//fin du foreach
+		}//fin du if sent == 1
 		
-		}
-		$this->SetMessage('Résultats des envois dans le module Asso Messages');
-		$this->RedirectToAdminTab('pres');
-	}
+		$this->SetMessage('Envois effectués');
+		$this->RedirectToAdminTab('insc');
+	}//fin du if $error
 	
 }
 else
 {
 	$this->SetMessage('Il manque un paramètre !');
-	$this->RedirectToAdminTab('pres');
+	$this->RedirectToAdminTab('insc');
 }
 
 ?>

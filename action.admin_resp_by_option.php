@@ -40,7 +40,7 @@ else
 {
 	$error++;
 }
-$smarty->assign('revenir', $this->CreateLink($id, 'defaultadmin', $returnid, $contents='<= Revenir'));	
+
 	
 $dbresult= array();
 $query= "SELECT id_option, genid FROM ".cms_db_prefix()."module_inscriptions_belongs WHERE id_inscription = ? AND id_option = ? ";

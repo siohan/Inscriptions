@@ -14,6 +14,7 @@ if( !empty($_POST) ) {
 	//on sauvegarde ! Ben ouais !
 	$this->SetPreference('admin_email', $_POST['admin_email']);
 	$this->SetTemplate('relanceemail', $_POST['relanceemail']);
+	$this->SetPreference('use_messages', $_POST['use_messages']);
 	
 	//on redirige !
 	$this->RedirectToAdminTab('emails');
@@ -23,6 +24,7 @@ else
 	$tpl = $smarty->CreateTemplate($this->GetTemplateResource('notifications.tpl'), null, null, $smarty);
 	$tpl->assign('admin_email', $this->GetPreference('admin_email'));
 	$tpl->assign('relanceemail', $this->GetTemplate('relanceemail'));
+	$tpl->assign('use_messages', $this->GetPreference('use_messages'));
 	$tpl->display();	
 }
 #

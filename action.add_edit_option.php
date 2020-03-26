@@ -1,5 +1,11 @@
 <?php
 if( !isset($gCms) ) exit;
+if (!$this->CheckPermission('Inscriptions use'))
+{
+    	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;
+   
+}
 
 
 //debug_display($_POST, 'Parameters');
@@ -78,13 +84,18 @@ if(!empty($_POST))
 		{
 			$actif = $_POST['actif'];
 		}
+		if (isset($_POST['jauge']) && $_POST['jauge'] !='')
+		{
+			$jauge = (int) $_POST['jauge'];
+		}
+		
 		
 
 		if($error < 1)
 		{
 			if($edit == 0)
 			{
-				$add = $insc_ops->add_option($id_inscription,$nom, $description,  $date_debut, $date_fin, $actif, $tarif,$timbre);
+				$add = $insc_ops->add_option($id_inscription,$nom, $description,  $date_debut, $date_fin, $actif, $tarif,$timbre,$jauge);
 				if(true === $add)
 				{
 					$this->SetMessage('Option ajoutée');
@@ -96,7 +107,7 @@ if(!empty($_POST))
 			}
 			else
 			{
-				$edit = $insc_ops->edit_option($record_id,$id_inscription,$nom, $description, $date_debut, $date_fin, $actif,$tarif);
+				$edit = $insc_ops->edit_option($record_id,$id_inscription,$nom, $description, $date_debut, $date_fin, $actif,$tarif, $jauge);
 				if(true === $edit)
 				{
 					$this->SetMessage('Option modifiée');
@@ -113,7 +124,7 @@ if(!empty($_POST))
 		}
 
 
-$this->Redirect($id,'admin_options', $returnid, array('record_id'=>$id_inscription));//($id,'add_types_cotis_categ',$returnid, array('record_id'=>$record_id));
+$this->Redirect($id,'view_details_inscription', $returnid, array('record_id'=>$id_inscription));//($id,'add_types_cotis_categ',$returnid, array('record_id'=>$record_id));
 	
 }
 else
@@ -128,7 +139,7 @@ else
 	$timbre = time();
 	$actif = 1;
 	$tarif = '0.00';
-	
+	$jauge = 0;
 	
 	
 	if(isset($params['id_inscription']) && $params['id_inscription'] != '')
@@ -157,6 +168,7 @@ else
 		$actif = $details_options['actif'];
 		$tarif = $details_options['tarif'];
 		$timbre = $details_options['timbre'];
+		$jauge = $details_options['jauge'];
 	}	
 	$tpl = $smarty->CreateTemplate($this->GetTemplateResource('add_edit_option.tpl'), null, null, $smarty);
 	$tpl->assign('id_inscription', $id_inscription);
@@ -169,6 +181,7 @@ else
 	$tpl->assign('date_fin', $date_fin);
 	$tpl->assign('timbre', $timbre);
 	$tpl->assign('tarif', $tarif);
+	$tpl->assign('jauge', $jauge);
 	$tpl->display();
 }
 

@@ -29,6 +29,12 @@
 		<div class="grid_8">
 			<select name="actif">{cms_yesno selected=$actif}</select>{cms_help key='help_actif' title='Actif/Inactif'}
 		</div>
+	</div>
+	<div class="c_full cf">
+		<label class="grid_3">Nb places max</label>
+			<div class="grid_8">
+				<input type="text" name="jauge" value="{$jauge}">{cms_help key='help_jauge' title='Place limite'}
+			</div>
 	</div>	
 <div class="c_full cf">
 	<label class="grid_3">Date de début</label>
@@ -43,7 +49,7 @@
 		</div>
 </div>
 <div class="c_full cf">
-		<label class="grid_3">Tarif de l'option'</label>
+		<label class="grid_3">Tarif de l'option</label>
 		<div class="grid_8">
 			<input type="text" name="tarif" value="{$tarif}"/>
 		</div>

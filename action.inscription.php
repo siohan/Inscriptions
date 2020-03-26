@@ -2,7 +2,7 @@
 set_time_limit(300);
 if(!isset($gCms)) exit;
 //on vérifie les permissions
-if(!$this->CheckPermission('Adherents use'))
+if(!$this->CheckPermission('Inscriptions use'))
 {
 	echo $this->ShowErrors($this->Lang('needpermission'));
 	return;
@@ -204,7 +204,8 @@ switch($obj)
 		$date_limite = $details['date_limite'] + $duplication_time;
 		$date_debut = $details['date_debut']+$duplication_time;
 		$date_fin = $details['date_fin'] + $duplication_time;
-		$add_insc = $insc_ops->duplicate_inscription($details['nom'], $details['description'], $date_limite, $date_debut, $date_fin, $details['actif'], $details['groupe'], $details['group_notif'], $details['choix_multi']);
+		$timbre = time();
+		$add_insc = $insc_ops->duplicate_inscription($details['nom'], $details['description'], $date_limite, $date_debut, $date_fin, $details['actif'], $details['groupe'], $details['group_notif'], $details['choix_multi'],$timbre, $details['occurence'], $details['start_collect'], $details['collect_mode'], $details['end_collect']);
 		//var_dump($add_insc);
 		if(FALSE != $add_insc)
 		{
@@ -229,7 +230,7 @@ switch($obj)
 	}
 	if(isset($params['id_inscription']) && $params['id_inscription'] != '')
 	{
-		$this->Redirect($id, 'admin_options', $returnid, array('record_id'=>$params['id_inscription'] ));
+		$this->Redirect($id, 'view_details_inscription', $returnid, array('record_id'=>$params['id_inscription'] ));
 	}
 	break;
 }

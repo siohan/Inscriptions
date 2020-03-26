@@ -156,6 +156,19 @@ switch($current_version)
 		$dict->ExecuteSQLArray($sqlarray);
 		
 	}
+	case "0.5" :
+	case "0.5.1" :
+	{
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_inscriptions_inscriptions", "occurence I(11) DEFAULT 0, ext I(1) DEFAULT 0, start_collect I(11), end_collect I(11), collect_mode I(1) DEFAULT 0");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_inscriptions_options", "jauge I(9) DEFAULT 0");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$this->SetPreference('Interval', 900);//interval de collecte 
+		$this->SetPreference('collect_mode', 0);
+		$this->SetPreference('use_messages', 0);
+	}
 
 }
 // put mention into the admin log

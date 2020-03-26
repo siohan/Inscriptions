@@ -1,6 +1,7 @@
 <?php
 if (!isset($gCms)) exit;
-//debug_display($params, 'Parameters');
+
+//debug_display($_POST, 'Parameters');
 
 $aujourdhui = date('Y-m-d ');
 $error = 0;
@@ -8,9 +9,9 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 $insc_ops = new T2t_inscriptions;	
 		
 		
-		if (isset($params['id_inscription']) && $params['id_inscription'] !='')
+		if (isset($_POST['id_inscription']) && $_POST['id_inscription'] !='')
 		{
-			$id_inscription = $params['id_inscription'];
+			$id_inscription = $_POST['id_inscription'];
 			$details = $insc_ops->details_inscriptions($id_inscription);
 			$choix = $details['choix_multi'];
 		//	$edit = 1;
@@ -21,28 +22,17 @@ $insc_ops = new T2t_inscriptions;
 			$error++;
 		}
 				
-		if (isset($params['nom']) && $params['nom'] !='')
+		if (isset($_POST['nom']) && $_POST['nom'] !='')
 		{
-			/*
-			if(true === is_array($params['nom']))
-			{
-				
-			}
-			else
-			{
-				$id_option = $params['nom'];
-			}
-			*/
-			$id_option = $params['nom'];
-		
+			$id_option = $_POST['nom'];		
 		}
 		else
 		{
 			$error++;
 		}
-		if (isset($params['genid']) && $params['genid'] !='')
+		if (isset($_POST['genid']) && $_POST['genid'] !='')
 		{
-			$genid = $params['genid'];
+			$genid = $_POST['genid'];
 		}
 	
 		if($error < 1)

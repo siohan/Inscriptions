@@ -1,7 +1,14 @@
 <?php
 if (!isset($gCms)) exit;
+if (!$this->CheckPermission('Inscriptions use'))
+{
+    	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;
+   
+}
+
 //require_once(dirname(__FILE__).'/include/prefs.php');
-debug_display($params, 'Parameters');
+//debug_display($params, 'Parameters');
 if (!$this->CheckPermission('Inscriptions use'))
 {
 	echo $this->ShowErrors($this->Lang('needpermission'));

@@ -1,5 +1,11 @@
 <?php
 if (!isset($gCms)) exit;
+if (!$this->CheckPermission('Inscriptions use'))
+{
+    	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;
+   
+}
 
 if(isset($params['id_inscription']) && $params['id_inscription'] !="")
 {

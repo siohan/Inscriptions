@@ -2,12 +2,12 @@
 
 #-------------------------------------------------------------------------
 # Module : Inscriptions - 
-# Version : 0.5, Sc
-# Auteur : Claude SIOHAN
+# Version : 0.6, Sc
+# Auteur : AssoSimple
 #-------------------------------------------------------------------------
 /**
  *
- * @author Claude SIOHAN
+ * @author AssoSimple 
  * @since 0.1
  * @version $Revision: 1 $
  * @modifiedby $LastChangedBy: Claude
@@ -20,10 +20,10 @@ class Inscriptions extends CMSModule
   
   function GetName() { return 'Inscriptions'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.5'; }  
+  function GetVersion() { return '0.6'; }  
   function GetHelp() { return $this->Lang('help'); }   
-  function GetAuthor() { return 'Claude SIOHAN'; } 
-  function GetAuthorEmail() { return 'claude.siohan@gmail.com'; }
+  function GetAuthor() { return 'AssoSimple'; } 
+  function GetAuthorEmail() { return 'contact@asso-simple.fr'; }
   function GetChangeLog() { return $this->Lang('changelog'); }
     
   function IsPluginModule() { return true; }
@@ -41,7 +41,7 @@ class Inscriptions extends CMSModule
   
   function GetDependencies()
   {
-	return array('Adherents'=>'0.3.4.5','Messages'=>'0.3');
+	return array('Adherents'=>'0.3.5');
   }
 
   
@@ -92,7 +92,7 @@ public function get_tasks()
 {
    $obj = array();
 	$obj[0] = new reponsesTask();
- //  	$obj[0] = new sendTask();  
+   	$obj[1] = new RelanceInscriptionsTask();  
 	
 return $obj; 
 }

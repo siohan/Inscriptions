@@ -9,7 +9,7 @@ if (!$this->CheckPermission('Inscriptions use'))
 $db =& $this->GetDb();
 global $themeObject;
 $insc_ops = new T2t_inscriptions;
-//debug_display($params, 'Parameters');
+debug_display($params, 'Parameters');
 if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 {
 	$id_inscription = $params['id_inscription'];
@@ -27,7 +27,7 @@ else
 	//redir
 }
 
-$smarty->assign('revenir', $this->CreateLink($id, 'defaultadmin', $returnid, $contents='<= Revenir'));
+$smarty->assign('revenir', $this->CreateLink($id, 'view_details_inscription', $returnid, $contents='<= Revenir'));
 $smarty->assign('details', $this->CreateLink($id, 'admin_resp_by_option', $returnid, $contents='Réponse par option', array('id_inscription'=>$id_inscription)));	
 $dbresult= array();
 $query= "SELECT beadh.genid,be_insc.id, be_insc.id_option, be_insc.id_inscription FROM ".cms_db_prefix()."module_adherents_groupes_belongs AS beadh LEFT JOIN ".cms_db_prefix()."module_inscriptions_belongs AS be_insc ON be_insc.genid = beadh.genid AND be_insc.id_inscription = ?";//"  WHERE beadh.id_group = ?";

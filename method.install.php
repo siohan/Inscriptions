@@ -38,7 +38,12 @@ $flds = "
 	groupe I(3) DEFAULT 0,
 	choix_multi I(1),
 	group_notif I(3),
-	timbre I(11)";
+	timbre I(11) DEFAULT 0,
+	occurence I(11),
+	ext I(1),
+	start_collect I(11),
+	collect_mode I(1) DEFAULT 0, 
+	end_collect I(11),";
 	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_inscriptions", $flds, $taboptarray);
 	$dict->ExecuteSQLArray($sqlarray);			
 //
@@ -58,7 +63,8 @@ $flds = "
 	actif I(1),
 	tarif F,
 	groupe I(1) DEFAULT 0,
-	timbre I(11)";
+	timbre I(11) DEFAULT 0,
+	jauge I(9) DEFAULT 0";
 	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_options", $flds, $taboptarray);
 	$dict->ExecuteSQLArray($sqlarray);			
 //
@@ -113,6 +119,9 @@ $this->SetPreference('last_updated', time());
 $this->SetPreference('default_group', 0);
 $this->SetPreference('pageid_inscriptions', '');
 $this->SetPreference('LastSendNotification', time());
+$this->SetPreference('Interval', 900);
+$this->SetPreference('collect_mode', 0);
+$this->SetPreference('use_messages', 0);
 
 // put mention into the admin log
 $this->Audit( 0, 

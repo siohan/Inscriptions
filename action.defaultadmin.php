@@ -8,17 +8,12 @@ if ( !isset($gCms) ) exit;
 	
 //debug_display($params, 'Parameters');
 echo $this->StartTabheaders();
-
-if(isset($params['activetab']) && !empty($params['activetab']))
-  {
-    $tab = $params['activetab'];
-  } else {
-  $tab = 'ins';
- }	
+$active_tab = empty($params['active_tab']) ? '': $params['active_tab'];
 	
-	echo $this->SetTabHeader('ins', 'Inscriptions', ('ins' == $tab)?true:false);
-	echo $this->SetTabHeader('emails', 'Notifications', ('emails' == $tab)?true:false);
-	echo $this->SetTabHeader('config', 'Config', ('config' == $tab)?true:false);
+	
+	echo $this->SetTabHeader('ins', 'Inscriptions', ($active_tab == 'ins')?true:false);
+	echo $this->SetTabHeader('emails', 'Notifications', ($active_tab == 'emails')?true:false);
+	echo $this->SetTabHeader('config', 'Config', ($active_tab == 'config')?true:false);
 	
 	echo $this->EndTabHeaders();
 

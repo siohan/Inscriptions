@@ -2,18 +2,22 @@
 
 if( !isset($gCms) ) exit;
 
+if (!$this->CheckPermission('Inscriptions use'))
+{
+    	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;
+   
+}
+//debug_display($params, 'Parameters');
 $db =& $this->GetDb();
 global $themeObject;
-/*
-$smarty->assign('add_edit', 
-		$this->CreateLink($id, 'add_edit_inscription', $returnid,$themeObject->DisplayImage('icons/system/newobject.gif', 'Ajouter une inscription', '', '', 'systemicon'), $this->Lang('add')));
-*/
+
 $refresh = '<img src="../modules/Inscriptions/images/refresh.png" alt="remise à zéro des inscrits" title="Remise à zéro des inscrits" />';
 		
 $dbresult= array();
-$query= "SELECT id,nom, description,date_limite, date_debut, date_fin, actif, groupe , choix_multi FROM ".cms_db_prefix()."module_inscriptions_inscriptions ORDER BY actif DESC, date_debut DESC";
-
-$dbresult= $db->Execute($query);
+$query= "SELECT id,nom, description,date_limite, date_debut, date_fin, actif, groupe , choix_multi FROM ".cms_db_prefix()."module_inscriptions_inscriptions ";//WHERE FROM_UNIXTIME( date_debut, date('%m')) = ? 
+$query.=" ORDER BY actif DESC, date_debut DESC";
+$dbresult= $db->Execute($query);//, array($current_month));
 $rowclass= 'row1';
 $rowarray= array();
 $cont_ops = new contact;
@@ -27,7 +31,7 @@ if ($dbresult)
 		$insc_ops = new T2t_inscriptions;
 	    while ($row= $dbresult->FetchRow())
 	      {
-		//$id_envoi = (int) $row['id_envoi'];
+
 		$onerow= new StdClass();
 		$onerow->rowclass= $rowclass;
 		$actif = $row['actif'];
@@ -81,7 +85,7 @@ if ($dbresult)
 		$onerow->groupe = $nom_gp;
 		$onerow->inscrits = $this->CreateLink($id, 'admin_reponses', $returnid, $insc_ops->count_users_in_inscription($row['id']), array("id_inscription"=>$row['id']));
 		$onerow->refresh = $this->CreateLink($id, 'inscription', $returnid, 'RAZ', array('obj'=>'refresh','id_inscription'=>$row['id']));
-		$onerow->view= $this->CreateLink($id, 'admin_reponses', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view'), '', '', 'systemicon'),array('id_inscription'=>$row['id']));
+		$onerow->view= $this->CreateLink($id, 'view_details_inscription', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view'), '', '', 'systemicon'),array('record_id'=>$row['id']));
 		$onerow->editlink= $this->CreateLink($id, 'add_edit_inscription', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'),array('record_id'=>$row['id']));
 		$onerow->duplicate= $this->CreateLink($id, 'inscription', $returnid, $themeObject->DisplayImage('icons/system/copy.gif', $this->Lang('copy'), '', '', 'systemicon'),array('obj'=>'duplicate','record_id'=>$row['id']));
 		$onerow->delete= $this->CreateLink($id, 'inscription', $returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'),array('obj'=>'delete_inscription','record_id'=>$row['id']),$warn_message='Attention, ceci supprimera les options et les adhésions des utilisateurs');
@@ -99,7 +103,15 @@ else
 $smarty->assign('itemsfound', $this->Lang('resultsfoundtext'));
 $smarty->assign('itemcount', count($rowarray));
 $smarty->assign('items', $rowarray);
-
+$smarty->assign('form2start',
+		$this->CreateFormStart($id,'mass_action',$returnid));
+$smarty->assign('form2end',
+		$this->CreateFormEnd());
+$articles = array("Activer"=>"activate_inscription", "Désactiver"=>"desactivate_inscription","Supprimer"=>"delete_inscription");
+$smarty->assign('actiondemasse',
+		$this->CreateInputDropdown($id,'actiondemasse',$articles));
+$smarty->assign('submit_massaction',
+		$this->CreateInputSubmit($id,'submit_massaction',$this->Lang('apply_to_selection'),'','',$this->Lang('areyousure_actionmultiple')));
 echo $this->ProcessTemplate('inscriptions.tpl');
 
 

@@ -1,6 +1,12 @@
 <?php
 
 if( !isset($gCms) ) exit;
+if (!$this->CheckPermission('Inscriptions use'))
+{
+    	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;
+   
+}
 
 $db =& $this->GetDb();
 global $themeObject;
