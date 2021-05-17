@@ -2,7 +2,7 @@
 
 #-------------------------------------------------------------------------
 # Module : Inscriptions - 
-# Version : 0.6, Sc
+# Version : 0.7, Sc
 # Auteur : AssoSimple
 #-------------------------------------------------------------------------
 /**
@@ -20,7 +20,7 @@ class Inscriptions extends CMSModule
   
   function GetName() { return 'Inscriptions'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.6'; }  
+  function GetVersion() { return '0.7'; }  
   function GetHelp() { return $this->Lang('help'); }   
   function GetAuthor() { return 'AssoSimple'; } 
   function GetAuthorEmail() { return 'contact@asso-simple.fr'; }
@@ -41,7 +41,7 @@ class Inscriptions extends CMSModule
   
   function GetDependencies()
   {
-	return array('Adherents'=>'0.3.5');
+	return array('Adherents'=>'0.4');
   }
 
   
@@ -67,6 +67,8 @@ class Inscriptions extends CMSModule
 	$this->SetParameterType('choix_multi', CLEAN_INT);
 	$this->SetParameterType('groupe', CLEAN_INT);
 	$this->SetParameterType('recap', CLEAN_INT);
+	$this->SetParameterType('user_name',CLEAN_STRING);
+	$this->SetParameterType('user_forename',CLEAN_STRING);
 	
 	//form parameters
 	$this->SetParameterType('submit',CLEAN_STRING);

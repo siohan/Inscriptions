@@ -126,14 +126,14 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 							//on consruit une url
 							
 							$lien = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels));
-							//$lien_recap = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels, "recap"=>"1"));
+							$lien_recap = $this->create_url($id,'default',$page, array("id_inscription"=>$id_inscription, "genid"=>$sels, "recap"=>"1"));
 							
 							$montpl = $this->GetTemplateResource('relanceemail.tpl');						
 							$smarty = cmsms()->GetSmarty();
 							// do not assign data to the global smarty
 							$tpl = $smarty->createTemplate($montpl);
 							$tpl->assign('lien',$lien);
-						//	$tpl->assign('lien_recap',$lien_recap);
+							$tpl->assign('lien_recap',$lien_recap);
 							$tpl->assign('titre',$titre);
 							$tpl->assign('description',$description);
 						 	$output = $tpl->fetch();
@@ -149,7 +149,7 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 							$cmsmailer->SetSubject($subject);
 							
 							
-					                if( !$cmsmailer->Send()  ) 
+					        if( !$cmsmailer->Send()  ) 
 							{			
 					                    	//return false;
 								if($mess_ok == 1)
@@ -157,7 +157,7 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 									$senttouser = 0;
 									$add_to_recipients = $mess_ops->add_messages_to_recipients($message_id, $sels, $email_contact,$output,$senttouser,$status, $ar);
 								}
-					                }
+					        }
 							else
 							{
 								if($mess_ok == 1)
@@ -166,7 +166,7 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 									$add_to_recipients = $mess_ops->add_messages_to_recipients($message_id, $sels, $email_contact, $output, $senttouser,$status, $ar);
 								}
 							}
-						$cmsmailer->reset();
+						//$cmsmailer->reset();
 						
 						}
 						else
@@ -189,7 +189,7 @@ if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 						$status = "Email absent";
 						$ar = 0;
 						$email_contact = "rien";
-						$add_to_recipients = $mess_ops->add_messages_to_recipients($message_id, $sels, $email_contact,$senttouser,$status, $ar);
+						$add_to_recipients = $mess_ops->add_messages_to_recipients($message_id, $sels, $email_contact,$output, $senttouser,$status, $ar);
 						
 					}
 				}

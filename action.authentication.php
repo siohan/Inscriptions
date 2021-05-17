@@ -2,18 +2,7 @@
 
 if( !isset($gCms) ) exit;
 
-if (!$this->CheckPermission('Inscriptions use'))
-{
-    	echo $this->ShowErrors($this->Lang('needpermission'));
-	return;
-   
-}
 
-if( isset($params['cancel']) )
-{
-    $this->RedirectToAdminTab('inscriptions');
-    return;
-}
 //debug_display($_POST, 'Parameters');
 $insc_ops = new T2t_inscriptions;
 if(!empty($_POST))
@@ -177,99 +166,21 @@ if(!empty($_POST))
 }
 else
 {
-	//debug_display($params, 'Parameters');
-	$gp_ops = new groups;
-	$liste_groupes = $gp_ops->liste_groupes_dropdown();
+	debug_display($params, 'Parameters');
 	
-	$record_id = '';
-	$edit = 0;
-	//ON VA CHERCHER l'enregistrement en question
-	$nom = '';
-	$description = '';
-	$date_limite = time();
-	$date_debut = time();
-	$date_fin = time();
-	$ext = 0;
-	$start_collect = time();
-	$end_collect = time();
-	$actif = 1;
-	$groupe = 1;
-	$collect_mode = (int) $this->GetPreference('collect_mode');
-	$group_notif = 1;
-	$choix_multi = 1;
-	$timbre = time();
-	$occurence = 0;
-	$result = 0;
-	$unite = 'Jours';
-	$partners = 0;
-	$liste_unite = array('Heures'=>'Heures', 'Jours'=>'Jours');
-	
-	if(isset($params['record_id']) && $params['record_id'] !="")
+	if(isset($params['genid']) && $params['genid'] !="")
 	{
-			$record_id = $params['record_id'];
-			$edit = 1;//on est bien en train d'éditer un enregistrement
-			//ON VA CHERCHER l'enregistrement en question
-			$details = $insc_ops->details_inscriptions($record_id);
-			$nom = $details['nom'];
-			$description = $details['description'];
-			$date_limite = $details['date_limite'];
-			$date_debut = $details['date_debut'];
-			$date_fin = $details['date_fin'];
-			$actif = $details['actif'];
-			$groupe = $details['groupe'];
-			$group_notif = $details['group_notif'];
-			$choix_multi = $details['choix_multi'];
-			$timbre = $details['timbre'];
-			$occurence = $details['occurence'];
-			$ext = $details['ext'];
-			$start_collect = $details['start_collect'];
-			$end_collect = $details['end_collect'];
-			$collect_mode = (int) $details['collect_mode'];
-			$partners = (int) $details['partners'];
-
+			$genid = (int) $params['genid'];
+	}
+	if(isset($params['id_inscription']) && $params['id_inscription'] !="")
+	{
+			$id_inscription = (int) $params['id_inscription'];
 	}
 	
-	if($occurence >0)
-	{
-		if(true == is_float($occurence/86400))
-		{
-			//on met le résultat en heures
-			$result = $occurence/3600;
-			$unite = 'Heures';
-		
-		}
-		else
-		{
-			//on met le résultat en jours
-			$result = $occurence/86400;
-			$unite = 'Jours';
-		
-		}
-	}
 	
-	$tpl = $smarty->CreateTemplate($this->GetTemplateResource('add_edit_inscription.tpl'), null, null, $smarty);
-	$tpl->assign('record_id', $record_id);
-	$tpl->assign('edit', $edit);
-	$tpl->assign('actif', $actif);
-	$tpl->assign('nom', $nom);
-	$tpl->assign('description', $description);
-	$tpl->assign('date_limite', $date_limite);
-	$tpl->assign('date_debut', $date_debut);
-	$tpl->assign('start_collect', $start_collect);
-	$tpl->assign('end_collect', $end_collect);
-	$tpl->assign('collect_mode', $collect_mode);
-	$tpl->assign('date_fin', $date_fin);
-	$tpl->assign('groupe', $groupe);
-	$tpl->assign('group_notif', $group_notif);
-	$tpl->assign('timbre', $timbre);
-	$tpl->assign('liste_groupes', $liste_groupes);
-	$tpl->assign('choix_multi', $choix_multi);
-	$tpl->assign('occurence', $occurence);
-	$tpl->assign('partners', $partners);
-	$tpl->assign('ext', $ext);
-	$tpl->assign('result', $result);
-	$tpl->assign('unite', $unite);
-	$tpl->assign('liste_unite', $liste_unite);
+	$tpl = $smarty->CreateTemplate($this->GetTemplateResource('feu_auth.tpl'), null, null, $smarty);
+	$tpl->assign('genid', $genid);
+	$tpl->assign('id_inscription', $id_inscription);
 	$tpl->display();
 	
 }

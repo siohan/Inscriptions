@@ -49,6 +49,7 @@ if($dbresult && $dbresult->RecordCount()>0)
 			$onerow->description = $row['description'];
 			$onerow->date_debut =  $row['date_debut'];
 			$inscrit = $insc_ops->is_inscrit_opt($row['id'], $genid);
+			$checked = $insc_ops->is_checked_opt($row['id'], $genid);
 			if(FALSE ===$inscrit )
 			{
 				$onerow->is_inscrit = $this->CreateLink($id, 'inscription',$returnid, $themeObject->DisplayImage('icons/system/false.gif', $this->Lang('false'), '', '', 'systemicon'),array('obj'=>'add_reponse', 'id_inscription'=>$id_inscription, 'genid'=>$genid, 'id_option'=>$id_option));

@@ -46,10 +46,10 @@ class RelanceInscriptionsTask implements CmsRegularTask
       	// Ce qu'il y a à exécuter ici
 	
 	$db = cmsms()->GetDb();
+	$last_execute = (int) $mess->GetPreference('last_updated');
+	$query = "SELECT id AS id_inscription, groupe, nom FROM ".cms_db_prefix()."module_inscriptions_inscriptions WHERE actif = 1 AND collect_mode = 1 AND UNIX_TIMESTAMP() BETWEEN start_collect AND end_collect AND date_limite > UNIX_TIMESTAMP() AND occurence > 0 AND UNIX_TIMESTAMP() > ? + occurence";
 	
-	$query = "SELECT id AS id_inscription, groupe, nom FROM ".cms_db_prefix()."module_inscriptions_inscriptions WHERE actif = 1 AND collect_mode = 1 AND start_collect <= UNIX_TIMESTAMP() AND end_collect > UNIX_TIMESTAMP() AND date_limite > UNIX_TIMESTAMP() AND occurence > 0 AND UNIX_TIMESTAMP() > timbre + occurence";
-	
-      	$dbresult = $db->Execute($query);
+      	$dbresult = $db->Execute($query, array($last_execute));
 	//on a donc les n licences pour faire la deuxième requete
 	//on commence à boucler
 	if($dbresult && $dbresult->RecordCount()>0)  //la requete est ok et il y a des résultats
@@ -198,7 +198,7 @@ class RelanceInscriptionsTask implements CmsRegularTask
       }
       
       $mess = cms_utils::get_module('Inscriptions');
-      $mess->SetPreference('LastSendNotification', $time);
+      $mess->SetPreference('last_updated', $time);
       $mess->Audit('','Inscriptions','Relance Inscriptions Ok');
       
    }

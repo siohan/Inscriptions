@@ -36,8 +36,8 @@ $(document).ready(function(){
 		<th>Début -> Fin</th>
 		<th>actif ?</th>
 		<th>Prévenir</th>
-	<!--	<th>Options actives</th>
-		<th>Options</th>
+		<th>Options actives</th>
+		<!--<th>Options</th>
 		<th>Inscrit(s)</th>
 		<th>Choix multi</th>
 		<th>Groupe</th>-->

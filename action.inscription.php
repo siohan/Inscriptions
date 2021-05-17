@@ -23,7 +23,7 @@ else
 }
 switch($obj)
 {
-	case "activate_desactivate" :
+	case "activate_desactivate" : //active/désactive une inscription
 		$db = cmsms()->GetDb();
 		if(isset($params['record_id']) && $params['record_id'] != '')
 		{
@@ -174,7 +174,7 @@ switch($obj)
 		}
 		if($error < 1)
 		{
-			$del_rep = $insc_ops->add_reponse($id_inscription,$id_option, $genid);
+			$del_rep = $insc_ops->add_reponse($id_inscription,$id_option, $genid,$genid);
 			if(true === $del_rep)
 			{
 				$this->SetMessage('Choix ajouté');
@@ -204,8 +204,8 @@ switch($obj)
 		$date_limite = $details['date_limite'] + $duplication_time;
 		$date_debut = $details['date_debut']+$duplication_time;
 		$date_fin = $details['date_fin'] + $duplication_time;
-		$timbre = time();
-		$add_insc = $insc_ops->duplicate_inscription($details['nom'], $details['description'], $date_limite, $date_debut, $date_fin, $details['actif'], $details['groupe'], $details['group_notif'], $details['choix_multi'],$timbre, $details['occurence'], $details['start_collect'], $details['collect_mode'], $details['end_collect']);
+		$timbre = time();																		
+		$add_insc = $insc_ops->duplicate_inscription($details['nom'], $details['description'], $date_limite, $date_debut, $date_fin, $details['actif'], $details['groupe'], $details['group_notif'], $details['choix_multi'],$timbre, $details['occurence'], $details['ext'],$details['start_collect'], $details['collect_mode'], $details['end_collect'],$details['tag'],$details['partners']);
 		//var_dump($add_insc);
 		if(FALSE != $add_insc)
 		{
@@ -233,4 +233,22 @@ switch($obj)
 		$this->Redirect($id, 'view_details_inscription', $returnid, array('record_id'=>$params['id_inscription'] ));
 	}
 	break;
+	
+	case "delete_users_in_option" :
+	{
+			if(isset($params['id_option']) && $params['id_option'] >0)
+			{
+				$del = $insc_ops->delete_users_in_option($params['id_option']);
+				if(true == $del)
+				{
+					$this->SetMessage('Utilisateurs désinscrits de l\'option');
+				}
+				else
+				{
+					$this->SetMessage('Utilisateurs désinscrits de l\'option');
+				}
+			}
+			$this->Redirect($id, 'view_details_inscription', $returnid, array('record_id'=>$params['id_inscription'] ));
+	
+	}
 }

@@ -9,7 +9,7 @@ if (!$this->CheckPermission('Inscriptions use'))
 $db =& $this->GetDb();
 global $themeObject;
 $insc_ops = new T2t_inscriptions;
-debug_display($params, 'Parameters');
+//debug_display($params, 'Parameters');
 if(isset($params['id_inscription']) && $params['id_inscription'] !='')
 {
 	$id_inscription = $params['id_inscription'];

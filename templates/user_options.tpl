@@ -8,14 +8,16 @@
 		 <thead>
 		  <tr>
 			<th>Nom</th>
-			<th>Inscrit ?</th>		
+			<th>Inscrit ?</th>
+			<th>Confirmé ?</th>		
 		  </tr>
 		 </thead>
 		 <tbody>
 		{foreach from=$items item=entry}
 		  <tr class="{$entry->rowclass}">
 			<td>{$entry->nom}</td>
-		    <td>{$entry->is_inscrit}</td>	
+		    <td>{$entry->is_inscrit}</td>
+		<td>{if $entry->checked >0}{admin_icon icon="true.gif"}{else}{admin_icon icon="false.gif"}{/if}</td>	
 		  </tr>
 		{/foreach}
 		 </tbody>

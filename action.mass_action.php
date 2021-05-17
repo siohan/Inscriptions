@@ -74,12 +74,12 @@ if (isset($params['submit_massaction']) && isset($params['actiondemasse']) )
 				$this->RedirectToAdminTab('insc');
 	  		}			
 			break;
-			//supprime toutes les options d'une inscriptions et les adhésions  avec
+			//supprime les options sélectionnées d'une inscriptions et les adhésions  avec
 			case "delete_option" :			
 	  		{
 	    			foreach( $params['sel'] as $record_id)
 				{
-					$ac = $insc_ops->delete_options($record_id);
+					$ac = $insc_ops->delete_option($record_id);
 					if(true == $ac)
 					{
 						//on supprime aussi les adhésions 						

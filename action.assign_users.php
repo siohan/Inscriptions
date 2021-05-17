@@ -3,7 +3,7 @@ if( !isset($gCms) ) exit;
 ####################################################################
 ##                                                                ##
 ####################################################################
-//debug_display($params, 'Parameters');
+debug_display($params, 'Parameters');
 if (!$this->CheckPermission('Inscriptions use'))
 {
 	echo $this->ShowErrors($this->Lang('needpermission'));
@@ -34,7 +34,7 @@ else
 	$details = $insc_ops->details_inscriptions($id_inscription);
 }
 	
-$db = $this->GetDb();
+$db = cmsms()->GetDb();
 
 $gp_ops = new groups;
 $tab1 = $gp_ops->liste_licences_from_group($details['groupe']);

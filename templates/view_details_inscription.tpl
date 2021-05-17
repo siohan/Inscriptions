@@ -32,6 +32,12 @@
 		</div>
 	</div>
 	<div class="c_full cf">
+		<label class="grid_3">Les personnes externes au groupe peuvent s'inscrire ?</label>
+		<div class="grid_8">
+			<select name="ext" disabled="disabled">{cms_yesno selected=$ext}</select>
+		</div>
+	</div>
+	<div class="c_full cf">
 		<label class="grid_3">Groupe à notifier des réponses</label>
 		<div class="grid_8">
 			<select name="group_notif" disabled="disabled">{html_options options=$liste_groupes selected=$group_notif}</select>

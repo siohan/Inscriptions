@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
 # Module: Inscriptions
-# Version: 0.2
+# Version: 0.7
 # Method: Upgrade
 #-------------------------------------------------------------------------
 # CMS - CMS Made Simple is (c) 2008 by Ted Kulp (wishy@cmsmadesimple.org)
@@ -168,6 +168,28 @@ switch($current_version)
 		$this->SetPreference('Interval', 900);//interval de collecte 
 		$this->SetPreference('collect_mode', 0);
 		$this->SetPreference('use_messages', 0);
+	}
+	case "0.6" :
+	{
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_inscriptions_inscriptions", "tag C(255), partners I(2) DEFAULT 0");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_inscriptions_belongs", "referent I(11), checked I(1) DEFAULT 0");
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		//on remplace les clients par le genid
+		$query = "SELECT id FROM ".cms_db_prefix()."module_inscriptions_inscriptions";
+		$dbresult = $db->Execute($query);
+		if($dbresult)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$id = $row['id'];
+				$tag = "{Inscriptions id_inscription=\"$id\"}";
+				$query2 = "UPDATE ".cms_db_prefix()."module_inscriptions_inscriptions SET tag = ? WHERE id = ?";
+				$dbresult2 = $db->Execute($query2, array($tag,$id));
+			}
+		}		
 	}
 
 }

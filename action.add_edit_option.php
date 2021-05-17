@@ -8,7 +8,7 @@ if (!$this->CheckPermission('Inscriptions use'))
 }
 
 
-//debug_display($_POST, 'Parameters');
+debug_display($_POST, 'Parameters');
 $db =& $this->GetDb();
 global $themeObject;
 $insc_ops = new T2t_inscriptions;
@@ -88,6 +88,10 @@ if(!empty($_POST))
 		{
 			$jauge = (int) $_POST['jauge'];
 		}
+		//on ajoute la date de début et de fin au nom de l'option
+	//	$jour_semaine = $insc_ops->jour_semaine($date_debut);
+		
+	//	var_dump($jour_semaine);
 		
 		
 

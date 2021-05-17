@@ -25,7 +25,7 @@ class reponsesTask implements CmsRegularTask
          $time = time();
       }
 
-      	$last_execute = (int) $insc->GetPreference('last_updated');
+    $last_execute = (int) $insc->GetPreference('last_updated');
 	$interval = (int) $insc->GetPreference('Interval');
      	
 

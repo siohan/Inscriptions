@@ -43,7 +43,9 @@ $flds = "
 	ext I(1),
 	start_collect I(11),
 	collect_mode I(1) DEFAULT 0, 
-	end_collect I(11),";
+	end_collect I(11),
+	tag C(255),
+	partners I(2) DEFAULT 0";
 	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_inscriptions", $flds, $taboptarray);
 	$dict->ExecuteSQLArray($sqlarray);			
 //
@@ -80,6 +82,8 @@ $flds = "
 	id_inscription I(11),
 	id_option I(11),
 	genid I(11),
+	referent I(11),
+	checked I(1) DEFAULT 0,
 	timbre I(11)";
 	$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_inscriptions_belongs", $flds, $taboptarray);
 	$dict->ExecuteSQLArray($sqlarray);			

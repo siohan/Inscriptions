@@ -48,11 +48,12 @@ $lang['help_pageid_inscription'] = 'Vous devez indiquez l\'alias de la page de c
 $lang['help_envoi'] = 'L\'envoi pourra être programmé (à venir) et nécessitera le module Messages';
 $lang['help_jauge'] = 'Laissez à 0 si vous ne souhaitez pas activer de quota. Sinon entrez le nb maximum de places disponibles';
 $lang['help'] = '<h3>Que fait ce module ?</h3>
-<p>Ce module vous permet de gérer les inscriptions en interne à diverses manifestations, rencontres, entrainements,etc..La version externe est prévue.</p>
+<p>Ce module vous permet de gérer les inscriptions (internes et externes) à diverses manifestations, rencontres, entrainements,etc...</p>
 <h3>Mode d\'emploi</h3>
-<p>Pour recueillir les réponses, vous devez au préalable implémenter la balise suivante dans une de vos pages :<code>{cms_module module=\'Inscriptions\'}</code> et obligatoirement renseigner l\'alias de la page dans l\'onglet "Config". </p>
+<p>Pour recueillir les réponses, vous devez au préalable implémenter la balise spécifée ex :<code>{Inscriptions id_inscription=\'1\'}</code> Le numéro correspondant au numéro de l\'inscription. </p>
 <p>Entrez les données de votre inscription (nom, description, dates,...). Dans "options", créer les options qui apparaitront dans le formulaire.</p>
-<h3>Mode manuel ou automatique</h3>
+<h3>Inscriptions ouvertes</h3>
+<p>Laissez les personnes extérieures à votre structure s\'inscrire eux-mêmes à vos événements. Dans le module Adhérents, créez un groupe et dans l\'onglet "Groupes" mettez Oui à la question "Auto-enregistrement"<h3>Mode manuel ou automatique</h3>
 <p>En mode manuel, vous (re)lancez vous-même chaque envoi de notification à vos membres. En mode automatique, les relances s\'effectuent elles-mêmes dans l\'intervalle de début et de fin de prospection au rythme des relances que vous avez indiqué. Il est fortement conseillé d\'utiliser un service tiers de tâches cron (easycron, cronjob, etc...).</p>
 <h3>Envoi de notifications</h3>
 <p>Envoyer des notifications par email au groupe choisi pour l\'inscription. Un lien est automatiquement généré dans le courriel. Les utilisateurs répondent en cliquant sur ce lien.<br />

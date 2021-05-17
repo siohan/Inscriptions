@@ -31,6 +31,7 @@ if(isset($params['record_id']) && $params['record_id'] !='')
 	$tpl->assign('groupe', $details_insc['groupe']);
 	$tpl->assign('liste_groupes', $liste_groupes);
 	$tpl->assign('date_debut', $details_insc['date_debut']);
+	$tpl->assign('ext', $details_insc['ext']);
 	$tpl->assign('date_fin', $details_insc['date_fin']);
 	$tpl->assign('date_limite', $details_insc['date_limite']);
 	$tpl->assign('start_collect', $details_insc['start_collect']);
@@ -73,7 +74,7 @@ else
 }
 
 //SELECT * FROM ping_module_ping_recup_parties AS rec right JOIN ping_module_ping_joueurs AS j ON j.licence = rec.licence  ORDER BY j.id ASC
-$query= "SELECT id,id_inscription,nom, description, date_debut, date_fin, actif, tarif, jauge FROM ".cms_db_prefix()."module_inscriptions_options WHERE id_inscription = ?";//" ORDER BY date_debut DESC";
+$query= "SELECT id,id_inscription,nom, description, date_debut, date_fin, actif, tarif, jauge FROM ".cms_db_prefix()."module_inscriptions_options WHERE id_inscription = ? ORDER BY date_debut ASC";
 
 $dbresult= $db->Execute($query, array($record_id));
 $rowclass= 'row1';
@@ -96,7 +97,7 @@ if ($dbresult && $dbresult->RecordCount() > 0)
 		$onerow->actif= $themeObject->DisplayImage('icons/system/true.gif', $this->Lang('true'), '', '', 'systemicon');
 	}
 	
-	//$onerow->view = $this->CreateLink($id, 'sent_back', $returnid, $themeObject->DisplayImage('icons/topfiles/cmsmailer.gif', 'Renvoyer le mail', '', '', 'systemicon'),array("record_id"=>$row['id']));
+	$onerow->raz = $this->CreateLink($id, 'inscription', $returnid, 'Raz',array("obj"=>"delete_users_in_option", "id_inscription"=>$row['id_inscription'],"id_option"=>$row['id']));
 	$onerow->id= $row['id'];
 	$onerow->id_inscription= $row['id_inscription'];
 	$onerow->nom= $row['nom'];

@@ -35,7 +35,7 @@ $(document).ready(function(){
 		<th>Inscrits ?</th>
 		<th>Place(s)</th>
 		<th>Tarif</th>
-		<th colspan="5">Action(s)</th>
+		<th colspan="6">Action(s)</th>
 		<th><input type="checkbox" id="selectall" name="selectall"></th>
 	</tr>
  </thead>
@@ -52,6 +52,7 @@ $(document).ready(function(){
 	<td>{$entry->editlink}</td>
 	<td>{$entry->duplicate}</td>
 	<td>{$entry->assign_users}</td> 
+	<td>{$entry->raz}</td>
 	<td>{$entry->view}</td> 
 	<td>{$entry->delete}</td>
 	
